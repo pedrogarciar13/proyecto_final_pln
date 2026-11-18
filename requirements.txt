@@ -1,0 +1,26 @@
+# Python 3.11 · versiones con las que se ejecutó el notebook (Windows 11, CPU)
+pandas==3.1.1
+numpy==2.2.6
+scipy==1.17.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+joblib==1.6.0
+psutil==7.2.2
+# Modelos secuenciales (sesión 3). En Linux/Mac con GPU puede usarse tensorflow==2.20.0
+tensorflow-cpu==2.20.0
+keras==3.15.1
+# Transformers (sesión 4)
+torch==2.15.0
+transformers==5.23.0
+tokenizers==0.23.3
+safetensors==0.8.0
+accelerate==1.16.0
+datasets==5.2.0
+# Notebook
+ipykernel==7.4.0
+nbconvert==7.17.2
+nbclient==0.11.0
+# Generación de entregables (presentación, informe y matriz de riesgos)
+python-pptx==1.0.2
+python-docx==1.2.0
+openpyxl==3.1.5

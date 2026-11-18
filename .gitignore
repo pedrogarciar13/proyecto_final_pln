@@ -1,0 +1,22 @@
+# Base completa (136 MB, supera el límite de GitHub): se descarga aparte, ver data/README.md
+data/data_melisa_comentarios.csv
+data/*.parquet
+
+# Artefactos de modelos (se regeneran al ejecutar el notebook; BETO pesa ~440 MB)
+modelos/
+!modelos/.gitkeep
+
+# Entornos y secretos
+.venv/
+venv/
+.env
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Sistema
+.DS_Store
+Thumbs.db
+~$*

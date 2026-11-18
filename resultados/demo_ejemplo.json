@@ -1,0 +1,20 @@
+{
+ "entrada": "Me llegó el cargador y a la semana dejó de funcionar. Le escribí al vendedor dos veces y nunca respondió, así que tuve que comprar otro en una tienda.",
+ "modelo": "BETO",
+ "etiqueta": "negativo",
+ "confianza": 0.94,
+ "probabilidades": {
+  "negativo": 0.94,
+  "neutro": 0.054,
+  "positivo": 0.006
+ },
+ "decision": "automática",
+ "umbral": 0.69,
+ "alerta_vendedor": true,
+ "evidencia": [
+  "de funcionar",
+  "nunca",
+  "dejó de",
+  "funcionar"
+ ]
+}
