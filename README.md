@@ -52,6 +52,7 @@ comentarios**; los modelos de la sesión 3 también se reportan sobre la prueba 
 │   ├── generar_presentacion.py               docs/Presentacion_Proyecto_PLN.pptx desde los resultados
 │   ├── generar_informe.py                    docs/Informe_Tecnico_Proyecto_PLN.docx desde los resultados
 │   ├── generar_matriz_riesgos.py             docs/Matriz_Riesgos.xlsx desde los resultados
+│   ├── generar_guion.py                      Guion por rol y notas del orador de la presentación
 │   └── resumen.py                            Lectura de resultados compartida
 ├── resultados/                               Métricas (resultados.json, tablas CSV) y figuras del notebook
 ├── docs/                                     Entregables: presentación, informe técnico y matriz de riesgos
@@ -67,6 +68,7 @@ comentarios**; los modelos de la sesión 3 también se reportan sobre la prueba 
 | 3 | Dataset o muestra controlada + diccionario y origen | [`data/`](data/) |
 | 4 | Informe técnico (DOCX) | [`docs/Informe_Tecnico_Proyecto_PLN.docx`](docs/Informe_Tecnico_Proyecto_PLN.docx) |
 | 5 | Presentación final (PPTX, 18 diapositivas con notas por rol) | [`docs/Presentacion_Proyecto_PLN.pptx`](docs/Presentacion_Proyecto_PLN.pptx) |
+| 5b | Guion de la sustentación por rol (20 min, preguntas preparadas) | [`docs/Guion_Sustentacion_por_Rol.docx`](docs/Guion_Sustentacion_por_Rol.docx) |
 | 6 | Matriz de riesgos (XLSX) | [`docs/Matriz_Riesgos.xlsx`](docs/Matriz_Riesgos.xlsx) |
 | 7 | Demostración | `python src/demo.py "texto"` y sección 10 del notebook |
 

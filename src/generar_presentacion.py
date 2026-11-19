@@ -210,11 +210,12 @@ texto(s, 0.6, 1.2, 8.8, 1.4, "¿Qué siente el comprador? Sentimiento en reseña
 texto(s, 0.6, 2.75, 8.6, 0.8, "Línea base TF-IDF frente a RNN/LSTM/GRU (sesión 3) y un Transformer preentrenado, BETO (sesión 4), "
       "con abstención, calibración y gobierno", size=15, color="CADCFC")
 caja(s, 0.6, 3.85, 8.8, 0.02, TEAL, forma=MSO_SHAPE.RECTANGLE)
-texto(s, 0.6, 4.05, 6, 0.3, "Jose Romero", size=14, bold=True, color=WHITE)
+texto(s, 0.6, 4.05, 8.8, 0.3, "Jose Romero", size=14, bold=True, color=WHITE)
+texto(s, 0.6, 3.55, 8.8, 0.3, "Especialista en Machine Learning · Magíster en Ciencia de Datos · Magíster en Gerencia en IA", size=12, color=TEAL)
 texto(s, 0.6, 4.4, 8, 0.3, "Docente: Gerson José Moreno Morales · Noviembre de 2026", size=12, color="CADCFC")
 
 # ------------------------------------------------------------------ 2. Resumen ejecutivo
-s = nueva("Resumen ejecutivo", "La decisión en una diapositiva",
+s = nueva("Resumen ejecutivo · Magíster en Gerencia en IA", "La decisión en una diapositiva",
           f"Habla: Gerencia de IA\n\n\"Empezamos por la conclusión. Sobre la misma prueba de 5.000 comentarios, {corto(BERT)} obtiene "
           f"F1 macro {n(f['f1'][BERT])}, {('+' if f['delta_bert_s3'] >= 0 else '')}{n(f['delta_bert_s3'])} frente al mejor modelo "
           f"recurrente ({S3}) y {('+' if f['delta_bert_base'] >= 0 else '')}{n(f['delta_bert_base'])} frente a TF-IDF. "
@@ -229,7 +230,7 @@ texto(s, 0.75, 3.0, 8.5, 0.35, "Decisión del comité", size=14, bold=True, colo
 texto(s, 0.75, 3.4, 8.5, 1.6, decision, size=13)
 
 # ------------------------------------------------------------------ 3. Problema
-s = nueva("Problema · Gerencia de IA", "Quién usa el sistema y qué decisión mejora",
+s = nueva("Problema · Magíster en Gerencia en IA", "Quién usa el sistema y qué decisión mejora",
           "Habla: Gerencia de IA\n\n\"El usuario es el analista de experiencia del comprador. La decisión: qué comentarios se atienden "
           "primero y a qué vendedor se le envía una alerta. Hoy se lee por muestreo y las estrellas solo existen en reseñas, no en chats ni "
           "reclamos. Construimos la etiqueta con las estrellas: 1 y 2 negativo, 3 neutro, 4 y 5 positivo. El error más caro es leer como "
@@ -250,7 +251,7 @@ for i, (est, cl, col, acc) in enumerate([("1★ 2★", "NEGATIVO · 40%", RED, "
     texto(s, x + 0.18, 4.55, 2.5, 0.35, acc, size=11)
 
 # ------------------------------------------------------------------ 4. Datos
-s = nueva("Datos · Ciencia de Datos", "MeLiSA: 487 mil reseñas reales, auditadas antes de modelar",
+s = nueva("Datos · Magíster en Ciencia de Datos", "MeLiSA: 487 mil reseñas reales, auditadas antes de modelar",
           f"Habla: Ciencia de Datos\n\n\"Usamos MeLiSA, una base pública de la Universidad de Buenos Aires: {entero(A['filas'])} reseñas "
           f"de 7 países y 5 categorías. Cada hallazgo terminó en una decisión: {A['duplicados_texto']} textos repetidos se dejan una sola "
           f"vez, {A['textos_contradictorios']} textos con sentimientos distintos se eliminan, y los pocos correos, teléfonos o URL se "
@@ -289,7 +290,7 @@ tabla(s, 5.3, 2.55, 4.2, [["Revisión", "Hallazgo"],
                           ["Filas finales", entero(A["filas_limpias"])]], [2.0, 2.2], size=10.5)
 
 # ------------------------------------------------------------------ 5. Fuga y partición
-s = nueva("Datos · Ciencia de Datos", "Sin fuga: el título regala la respuesta y queda por fuera",
+s = nueva("Datos · Magíster en Ciencia de Datos", "Sin fuga: el título regala la respuesta y queda por fuera",
           f"Habla: Ciencia de Datos\n\n\"Un modelo que lee solo el título saca F1 {n(A['f1_solo_titulo'])}; leyendo el comentario saca "
           f"{n(A['f1_solo_comentario'])}. Que tres palabras le ganen al comentario completo demuestra que el título se escribe junto con "
           f"las estrellas: se excluye, igual que las estrellas. Partimos 70/15/15, estratificado y con semilla 42. Como BETO en CPU no puede "
@@ -325,7 +326,7 @@ texto(s, 5.2, 4.5, 4.3, 0.6, [[("Comparación justa: ", {"bold": True, "color": 
                               (f"validación y prueba comunes de {entero(A['n_comun'])} comentarios para los 8 modelos.", {})]], size=11)
 
 # ------------------------------------------------------------------ 6. Tres familias
-s = nueva("Modelado · Machine Learning", "Tres familias de modelos sobre la misma partición",
+s = nueva("Modelado · Especialista en Machine Learning", "Tres familias de modelos sobre la misma partición",
           f"Habla: Machine Learning\n\n\"La línea base convierte el texto en TF-IDF de palabras y bigramas y lo clasifica con regresión "
           f"logística o SVM. Las redes de la sesión 3 aprenden un embedding de 64 valores por palabra y lo leen en orden con RNN, LSTM o GRU. "
           f"BETO, de la sesión 4, ya llega preentrenado con millones de textos en español: divide en subpalabras y cada token mira a todos "
@@ -356,7 +357,7 @@ for i, (nom, sub, pasos, col) in enumerate(filas_fam):
             a.line.fill.background()
 
 # ------------------------------------------------------------------ 7. Atención y tokenizador
-s = nueva("Sesión 4 · Machine Learning", "Atención: cada palabra mira a todas las demás a la vez",
+s = nueva("Sesión 4 · Especialista en Machine Learning", "Atención: cada palabra mira a todas las demás a la vez",
           "Habla: Machine Learning\n\n\"La RNN tiene que cargar el inicio del comentario paso a paso. El Transformer calcula, para cada "
           "token, qué tan relevante es cada otro token: softmax de Q por K transpuesta sobre raíz de d, multiplicado por V. A la izquierda, "
           "la atención real de la última capa de nuestro BETO; a la derecha, la oclusión: cuánto cae la probabilidad si borramos cada "
@@ -383,7 +384,7 @@ texto(s, 6.65, 4.15, 2.85, 0.9, f"{n(A['tokens_bert']['subpalabras_por_palabra']
 
 # ------------------------------------------------------------------ 8. Fine-tuning
 hist = [h for h in s4["historia_bert"] if "eval_f1_macro" in h]
-s = nueva("Sesión 4 · Machine Learning", "Fine-tuning de BETO con las reglas de la sesión 4",
+s = nueva("Sesión 4 · Especialista en Machine Learning", "Fine-tuning de BETO con las reglas de la sesión 4",
           f"Habla: Machine Learning\n\n\"Ajustamos todo BETO, 110 millones de parámetros, con AdamW, learning rate 2e-5, warmup del 10%, "
           f"scheduler lineal y padding dinámico. Sin GPU, entrenamos con {entero(f['n_train_bert'])} comentarios estratificados, no con "
           f"340 mil: tardó {n(f['seg_bert'] / 60, 0)} minutos. Para que la comparación sea justa, entrenamos también una TF-IDF con exactamente "
@@ -402,7 +403,7 @@ for i, (v, et, col) in enumerate([(n(f["seg_bert"] / 60, 0) + " min", "de entren
 
 # ------------------------------------------------------------------ 9. Resultados
 orden = sorted(s4["comun"], key=lambda k: f["f1"][k])
-s = nueva("Resultados · Machine Learning", "Comparación justa: los ocho modelos sobre la misma prueba",
+s = nueva("Resultados · Especialista en Machine Learning", "Comparación justa: los ocho modelos sobre la misma prueba",
           f"Habla: Machine Learning\n\n\"Este es el resultado central: F1 macro sobre los mismos 5.000 comentarios de prueba. "
           f"{corto(BERT)} logra {n(f['f1'][BERT])}; el mejor recurrente, {S3}, {n(f['f1'][S3])}; la TF-IDF con todos los datos, "
           f"{n(f['f1'][BASE])}. Fíjense en la barra naranja: la TF-IDF con los mismos {entero(f['n_train_bert'])} comentarios que BETO "
@@ -434,7 +435,7 @@ texto(s, 6.1, 3.25, 3.4, 1.8, [[("Cómo leerlo. ", {"bold": True, "color": NAVY}
                                 "tres clases, así que el neutro cuenta tanto como las demás.", {})]], size=11)
 
 # ------------------------------------------------------------------ 10. Por clase + IC
-s = nueva("Resultados · Machine Learning", "¿La ventaja es real? Clase por clase y con intervalo de confianza",
+s = nueva("Resultados · Especialista en Machine Learning", "¿La ventaja es real? Clase por clase y con intervalo de confianza",
           "Habla: Machine Learning\n\n\"Todos los modelos son buenos en negativo y positivo; la diferencia se juega en el neutro. Y no basta "
           "con ver una diferencia: remuestreamos la prueba mil veces. Si el intervalo del 95% no cruza el cero, la diferencia no es suerte.\"")
 cd = CategoryChartData()
@@ -466,7 +467,7 @@ texto(s, 5.9, 3.15, 3.6, 1.9, "Bootstrap de 1.000 remuestreos de la prueba comú
 # ------------------------------------------------------------------ 11. Errores y segmentos
 tr = s4["segmentos"]["tramo"]
 causas = s4["errores_causas"]
-s = nueva("Errores · Ciencia de Datos", "Dónde se equivocan los modelos",
+s = nueva("Errores · Magíster en Ciencia de Datos", "Dónde se equivocan los modelos",
           f"Habla: Ciencia de Datos\n\n\"Revisamos los errores después de congelar el modelo. Por longitud, la red y BETO ganan sobre todo en "
           f"los comentarios largos, donde el orden importa. La mayoría de los errores de BETO están en la frontera con el neutro: comentarios "
           f"de 3 estrellas que suenan positivos o negativos. Parte del error es de la etiqueta, no del modelo, porque la etiqueta sale de las "
@@ -500,7 +501,7 @@ texto(s, 5.8, 3.55, 3.7, 1.5, [[("Error grave (negativo → positivo): ", {"bold
 # ------------------------------------------------------------------ 12. Robustez
 casos = s4["casos_robustez"]
 mods = [BASE, S3, "BETO"]
-s = nueva("Robustez · Ciencia de Datos y ML", "Contrafactuales: negación, contraste y lo que no sabe",
+s = nueva("Robustez · Magíster en Ciencia de Datos", "Contrafactuales: negación, contraste y lo que no sabe",
           "Habla: Ciencia de Datos\n\n\"Probamos pares mínimos: la misma frase con y sin negación, con el contraste invertido, con errores de "
           "ortografía, mayúsculas, emojis e ironía, y textos que no tienen nada que ver con compras. Lo que buscamos en los textos fuera de "
           "dominio es que el modelo diga 'no sé' y mande el caso a una persona. Y encontramos un sesgo importante: en este corpus casi todos los comentarios cortos son negativos, así que los modelos aprendieron que corto es igual a negativo. Por eso los comentarios cortos no dispararán alertas automáticas.\"")
@@ -530,7 +531,7 @@ if SES:
           size=11, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 13. Calibración y abstención
-s = nueva("Abstención · Gerencia de IA", "Si el modelo no está seguro, decide una persona",
+s = nueva("Abstención · Magíster en Gerencia en IA", "Si el modelo no está seguro, decide una persona",
           f"Habla: Gerencia de IA\n\n\"Primero calibramos: con temperature scaling la confianza de 0,8 significa acertar cerca del 80%. "
           f"Luego, si la confianza es menor que el umbral, el comentario pasa a una persona. El umbral se eligió en validación para lograr "
           f"recall de negativo de 0,92 en lo que el modelo decide. Con {corto(REC)}, en la prueba común decide el "
@@ -577,7 +578,7 @@ texto(s, 5.9, 3.25, 3.6, 1.8, [[("Calibración de " + corto(BERT) + ": ", {"bold
 
 # ------------------------------------------------------------------ 14. Costo y latencia
 ef = {e["modelo"]: e for e in s4["eficiencia"]}
-s = nueva("Costo · Gerencia de IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
+s = nueva("Costo · Magíster en Gerencia en IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
           f"Habla: Gerencia de IA\n\n\"Medimos todo en el mismo portátil, sin GPU. TF-IDF responde en menos de un milisegundo; BETO, en "
           f"{n(f['p95'].get('BETO'), 0)} ms en el percentil 95, y la versión cuantizada a int8 en {n(f['p95'].get('BETO int8'), 0)} ms. "
           f"Con el supuesto de una máquina de 4 vCPU a 0,20 dólares la hora, procesar un millón de comentarios cuesta centavos con TF-IDF y "
@@ -599,7 +600,7 @@ for i, (v, et, col) in enumerate([
 # ------------------------------------------------------------------ 15. Criterio de adopción
 crit = s4["criterio"]
 mods_c = list(dict.fromkeys(c["modelo"] for c in crit))
-s = nueva("Decisión · Gerencia de IA", "Criterio de adopción de la sesión 4",
+s = nueva("Decisión · Magíster en Gerencia en IA", "Criterio de adopción de la sesión 4",
           f"Habla: Gerencia de IA\n\n\"El criterio de la sesión 4 exige cuatro cosas a la vez: mejorar el F1 al menos 0,02 frente al campeón "
           f"anterior, recall de negativo de 0,92 con abstención, cobertura automática de al menos 75% y latencia p95 de 150 ms o menos. "
           f"{(D['criterio_estricto'] + ' ' + D['por_que']) if D else ''}\"")
@@ -636,7 +637,7 @@ caja(s, 0.5, 4.1, 9.0, 0.95, "E0F2F4")
 texto(s, 0.7, 4.15, 8.6, 0.85, ((D["criterio_estricto"] + " ") if D else "") + decision_corta, size=11.5, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 16. Riesgos
-s = nueva("Gobierno · Gerencia de IA", "Riesgos, controles y condiciones de suspensión",
+s = nueva("Gobierno · Magíster en Gerencia en IA", "Riesgos, controles y condiciones de suspensión",
           "Habla: Gerencia de IA\n\n\"Cada riesgo tiene un control y un responsable; la matriz completa está en el Excel. Lo más importante: "
           "el modelo solo prioriza y alerta, nunca sanciona; la PII se enmascara antes de inferir; reportamos F1 por país; y tenemos "
           "condiciones explícitas para suspender o volver al modelo simple.\"")
@@ -662,7 +663,7 @@ texto(s, 6.55, 1.85, 2.8, 3.1, ["Recall de negativo < 0,88 dos semanas seguidas"
 # ------------------------------------------------------------------ 17. Demo y roadmap
 cfg_ej = {"etiqueta": "negativo", "confianza": "0,94", "decision": "automática", "alerta_vendedor": "true",
           "evidencia": "dejó de funcionar"}
-s = nueva("Demostración y adopción", "El flujo completo, de la entrada a la decisión",
+s = nueva("Demostración · Especialista en Machine Learning y Magíster en Ciencia de Datos", "El flujo completo, de la entrada a la decisión",
           "Habla: Machine Learning y Gerencia de IA\n\n\"En la demo escribimos un comentario. El sistema valida la entrada, enmascara "
           "correos y teléfonos, calcula probabilidades calibradas y aplica el umbral: si está seguro decide y, si es negativo, alerta al "
           "vendedor; si no, lo manda a una persona. Además muestra la evidencia, las palabras que más pesaron. El código está en src/demo.py "
@@ -713,7 +714,7 @@ s = nueva(None, None, f"Hablan: los tres roles\n\nMachine Learning: \"{corto(BER
           f"Ciencia de Datos: \"La evaluación es válida: sin título ni estrellas, sin duplicados entre conjuntos, umbral y temperatura "
           f"elegidos en validación y prueba usada una sola vez.\"\nGerencia de IA: \"{decision}\" Gracias; quedamos atentos a sus preguntas.",
           oscura=True)
-texto(s, 0.6, 0.5, 8.8, 0.3, "RECOMENDACIÓN Y SIGUIENTES PASOS", size=11, bold=True, color=TEAL)
+texto(s, 0.6, 0.5, 8.8, 0.3, "RECOMENDACIÓN Y SIGUIENTES PASOS · LOS TRES ROLES", size=11, bold=True, color=TEAL)
 texto(s, 0.6, 0.9, 8.8, 1.3, decision_corta, size=19, bold=True, color=WHITE)
 for i, (t, d) in enumerate([("Siguiente experimento", f"Fine-tuning de BETO con GPU y los 340 mil comentarios; comparar con XLM-R y RoBERTuito."),
                             ("Datos", "Agregar comentarios cortos balanceados (sesgo de longitud) y reetiquetar una muestra del neutro."),
