@@ -3,14 +3,17 @@
 Las especificaciones del proyecto (sección 10) permiten usar asistentes de IA siempre que el equipo responda por el contenido y declare
 cómo los usó. Esta es nuestra declaración. Preferimos contarlo con detalle en lugar de quedarnos cortos.
 
-> Los espacios marcados con **[COMPLETAR]** solo los puede llenar el equipo. Hay que llenarlos antes de entregar.
-
 ## 1. Herramientas y para qué las usamos
 
-| Herramienta | Para qué |
-|---|---|
-| **Claude Code (Anthropic)**, en la aplicación de escritorio | Asistente principal de programación y redacción (detalle abajo). |
-| [COMPLETAR: ChatGPT, Copilot, Gemini u otra, si alguien la usó] | [COMPLETAR: para qué] |
+La única herramienta de IA generativa que usamos fue Claude Code. No usamos ChatGPT, Copilot, Gemini ni otros asistentes. Las demás
+herramientas de la tabla son plataformas para guardar el código y publicar el proyecto; no generan contenido.
+
+| Herramienta | Tipo | Para qué |
+|---|---|---|
+| **Claude Code (Anthropic)**, en la aplicación de escritorio | Asistente de IA generativa | Programación y redacción (detalle abajo). |
+| **GitHub** | Plataforma de código | Repositorio del proyecto, historial de cambios y entrega. |
+| **Render** | Plataforma de despliegue | Demo web de respaldo con TF-IDF (https://sentimiento-melisa-demo.onrender.com). |
+| **Hugging Face** | Plataforma de modelos | BETO preentrenado (`dccuchile/bert-base-spanish-wwm-cased`), alojamiento de nuestro modelo ajustado y demo con BETO en el navegador. |
 
 Con Claude Code hicimos esto:
 
@@ -29,10 +32,12 @@ Lo que hizo el equipo:
 - Definir el problema, el usuario y la decisión que apoya el modelo, y elegir el corpus MeLiSA.
 - Revisar el código y los resultados, aprobar o pedir cambios en cada entrega y validar las conclusiones.
 - Tomar la decisión final del comité (piloto de BETO en modo sombra con controles) y preparar y presentar la sustentación.
-- [COMPLETAR: lo que hizo cada integrante, por ejemplo:]
-  - Pedro García Romero (Machine Learning): [COMPLETAR]
-  - Carlos Trilleras (Ciencia de Datos): [COMPLETAR]
-  - Fabiola Aldana Mora (Gerencia de IA): [COMPLETAR]
+- Cada integrante revisó y responde por la parte de su rol:
+  - **Pedro García Romero** (Especialista en Machine Learning): modelos, ajuste de BETO, resultados, eficiencia y demostración.
+  - **Carlos Trilleras** (Magíster en Ciencia de Datos): datos, auditoría y control de fuga, revisión de errores, robustez y sesgo de
+    longitud.
+  - **Fabiola Aldana Mora** (Magíster en Gerencia de IA): problema y decisión, caso de valor, abstención, costos, matriz de riesgos,
+    gobierno y recomendación.
 
 ## 2. Qué verificamos y cómo
 
@@ -49,9 +54,10 @@ Lo que hizo el equipo:
 - **Código.** Lo ejecutamos de principio a fin. Las partes críticas tienen comprobaciones explícitas en el notebook: la misma partición
   para todos los modelos, la prueba se mira una sola vez y se usan tres semillas para las redes recurrentes. La demo del navegador se
   comparó con BETO original en 1.000 reseñas (98% de etiquetas iguales).
-- **Errores del modelo.** La revisión de 20 errores de BETO (Tabla 7 del informe) la redactó la IA a partir de los ejemplos.
-  [COMPLETAR: confirmar que el equipo leyó cada caso y está de acuerdo con la causa asignada.]
-- **Referencias.** [COMPLETAR: confirmar que se revisaron los enlaces y las citas del anexo de referencias (MeLiSA, BETO, artículos).]
+- **Errores del modelo.** La IA redactó un primer borrador de la revisión de 20 errores de BETO (Tabla 7 del informe). El equipo leyó
+  cada caso y está de acuerdo con la causa asignada.
+- **Referencias.** El equipo revisó los enlaces y las citas del anexo de referencias (MeLiSA, BETO y artículos) y comprobó que
+  correspondan a lo que se cita.
 
 ## 3. Datos y servicios externos
 
@@ -59,6 +65,8 @@ Lo que hizo el equipo:
 - El texto de las reseñas puede traer correos o teléfonos. Por eso los enmascaramos antes de entrenar, en la muestra publicada en
   `data/` y en las demos.
 - Al asistente le compartimos el código, los resultados y muestras de reseñas públicas. Nada más.
+- A GitHub subimos el código, los documentos y una muestra de 5.001 reseñas con datos personales enmascarados. La base completa
+  no se sube.
 - En Hugging Face publicamos el modelo ajustado (`pedrogarciar13/beto-sentimiento-melisa`) y la demo. Ninguno de los dos contiene
   datos personales.
 
@@ -73,9 +81,7 @@ Lo que hizo el equipo:
 ## 5. Trazabilidad y autoría
 
 - **Historial.** El historial de commits de este repositorio muestra cómo se construyó cada entrega. Todos los commits salieron de una
-  sola cuenta (`pedrogarciar13`); los que tienen la línea `Co-Authored-By: Claude`, que son casi todos, se hicieron con el asistente.
-  [COMPLETAR, si aplica: cada integrante puede subir sus revisiones desde su propia cuenta.]
-- **Decisión.** La decisión del comité y sus condiciones están en `resultados/decision.json`, y las razones, en la sección 9 del
+  sola cuenta (`pedrogarciar13`); los que tienen la línea `Co-Authored-By: Claude`, que son casi todos, se hicieron con el asistente.- **Decisión.** La decisión del comité y sus condiciones están en `resultados/decision.json`, y las razones, en la sección 9 del
   notebook y en el informe.
 - **Responsables.** La autoría y los roles están en la tabla del README y en el guion de la sustentación. Cada integrante responde por
   la parte que presenta.

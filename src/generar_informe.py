@@ -600,10 +600,11 @@ p("Repositorio: https://github.com/pedrogarciar13/proyecto_final_pln. Para repro
   "en la terminal o con python app/app.py en el navegador (con BETO). También está publicada en línea de dos formas: con BETO en https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto, donde el modelo comprimido a int8 corre en el navegador del visitante (coincide con el original en el 98% de las etiquetas de una muestra de 1.000 reseñas), y con el modelo de respaldo TF-IDF en https://sentimiento-melisa-demo.onrender.com. Los documentos se regeneran desde resultados/resultados.json con los scripts "
   "de src/.")
 doc.add_heading("F. Uso de herramientas de IA generativa", 2)
-p("Como pide el curso, declaramos el uso de IA generativa. Usamos Claude Code (Anthropic) como asistente principal de programación y "
-  "redacción. Escribió y depuró buena parte del código del notebook, los scripts que generan los documentos y las demos; propuso "
+p("Como pide el curso, declaramos el uso de IA generativa. La única herramienta de IA generativa que usamos fue Claude Code (Anthropic), "
+  "como asistente principal de programación y redacción; GitHub, Render y Hugging Face los usamos solo como plataformas para el "
+  "código, las demos y el modelo. Escribió y depuró buena parte del código del notebook, los scripts que generan los documentos y las demos; propuso "
   "análisis como el control de fuera de dominio y el caso de valor con sensibilidad, y redactó los borradores de este informe. El "
-  "equipo definió el problema, revisó el código y los resultados, validó las conclusiones y tomó la decisión final. Ninguna cifra se "
+  "equipo definió el problema, revisó el código y los resultados, validó las conclusiones, leyó cada uno de los errores de la Tabla 7, revisó las referencias y tomó la decisión final. Ninguna cifra se "
   "escribió a mano: todas salen de ejecutar el notebook y los documentos se generan desde resultados/resultados.json. Las "
   "interpretaciones que no coincidieron con lo ejecutado se corrigieron. El caso de valor usa supuestos ilustrativos, no datos medidos. "
   "No usamos datos confidenciales: el corpus es público y enmascaramos los datos personales. El detalle está en DECLARACION_IA.md, en "

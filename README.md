@@ -131,7 +131,10 @@ licencia "other"; las usamos con fines académicos. El código del repositorio e
 licencias. Más detalle en [`data/README.md`](data/README.md) y [`LICENSE`](LICENSE).
 
 ## Uso de IA generativa
-Usamos Claude Code (Anthropic) como asistente principal de programación y redacción: escribió y depuró buena parte del código,
+La única herramienta de IA generativa que usamos fue Claude Code (Anthropic), como asistente de programación y redacción. Además
+usamos GitHub, Render y Hugging Face como plataformas para el código, las demos y el modelo. Claude Code escribió y depuró buena parte del código,
 propuso varios análisis y redactó los borradores de los documentos. El equipo definió el problema, revisó y validó los resultados y
-tomó la decisión final. Todas las cifras salen de ejecutar el notebook, y no usamos datos confidenciales porque el corpus es público.
+tomó la decisión final; también leímos cada error del análisis manual y revisamos
+las referencias. Todas las cifras salen de ejecutar el
+notebook, y no usamos datos confidenciales porque el corpus es público.
 El detalle (herramientas, verificación, datos, evidencia y trazabilidad) está en [`DECLARACION_IA.md`](DECLARACION_IA.md).
