@@ -1,20 +1,26 @@
 {
- "entrada": "Me llegó el cargador y a la semana dejó de funcionar. Le escribí al vendedor dos veces y nunca respondió, así que tuve que comprar otro en una tienda.",
+ "entrada": "Lo usé una semana y dejó de funcionar. La calidad es pésima, el material se siente barato y no lo recomiendo para nada.",
+ "estado": "ok",
  "modelo": "BETO",
+ "texto": "Lo usé una semana y dejó de funcionar. La calidad es pésima, el material se siente barato y no lo recomiendo para nada.",
+ "pii_enmascarada": false,
  "etiqueta": "negativo",
- "confianza": 0.94,
+ "confianza": 0.963,
  "probabilidades": {
-  "negativo": 0.94,
-  "neutro": 0.054,
-  "positivo": 0.006
+  "negativo": 0.963,
+  "neutro": 0.033,
+  "positivo": 0.003
  },
- "decision": "automática",
  "umbral": 0.69,
+ "decision": "automática",
  "alerta_vendedor": true,
+ "fuera_de_dominio": false,
+ "palabras": 23,
  "evidencia": [
-  "de funcionar",
-  "nunca",
-  "dejó de",
-  "funcionar"
- ]
+  "pésima",
+  "para nada",
+  "no lo",
+  "de funcionar"
+ ],
+ "advertencias": []
 }

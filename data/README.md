@@ -8,7 +8,8 @@
 | Publicación | Hugging Face: [`lpsc-fiuba/melisa`](https://huggingface.co/datasets/lpsc-fiuba/melisa) |
 | Licencia | "other" según la tarjeta del dataset. Uso **académico y no comercial** en este proyecto. |
 | Tipo de dato | **Real y público**: reseñas que los compradores publicaron en Mercado Libre. No es sintético. |
-| Periodo | **El archivo no trae fecha** por reseña; el periodo de recolección debe consultarse en la tarjeta del dataset. |
+| Periodo | Reseñas recolectadas entre **agosto de 2020 y enero de 2021** (tarjeta del dataset). El archivo no trae fecha por reseña. |
+| Selección | Los autores priorizaron reseñas según su **longitud** y su valoración (likes menos dislikes) y equilibraron las estrellas (~20% cada una). Ese filtro explica el sesgo de longitud que encontramos. |
 | Idioma | Español (este archivo solo contiene los 7 sitios hispanohablantes; la versión original también incluye portugués de Brasil). |
 | Permisos | Datos públicos publicados por los autores para investigación; no se recolectaron datos nuevos. |
 
@@ -51,7 +52,8 @@ La etiqueta **no fue anotada por personas**: se deriva de las estrellas (supervi
 | Longitud | Mediana 30 palabras · P95 75 · P99 118 | RNN: 100 tokens; BETO: 128 subpalabras (trunca < 2%) |
 | Países | MLA 43%, MLM 31%, MCO 10%, MLC 9%, MLU 5%, MLV 1%, MPE 0,7% | Reportar F1 por país; Perú y Venezuela con pocos datos |
 | PII | 0 correos, 25 URL y 194 posibles teléfonos (muchos son números de modelo o medidas) | Se enmascaran con `<EMAIL>`, `<URL>`, `<TEL>` |
-| **Sesgo de longitud** | 17,5% del corpus tiene ≤ 15 palabras y el **93,8%** de esos comentarios es negativo; los positivos casi siempre son largos | Los modelos aprenden "corto ⇒ negativo" (recall de positivos cortos: BETO 9,5%). Control: sin alertas automáticas para textos cortos; reentrenar con cortos balanceados |
+| **Sesgo de longitud** | 17,5% del corpus tiene ≤ 15 palabras y el **93,8%** de esos comentarios es negativo; los positivos casi siempre son largos (efecto del filtro de selección por longitud) | Los modelos aprenden "corto ⇒ negativo" (recall de positivos cortos: BETO 9,5%). Control: sin alertas automáticas para textos cortos; reentrenar con cortos balanceados |
+| **Vocabulario de posventa ausente** | "llegó", "envío", "entrega" y "servicio" no aparecen en ninguna reseña; "vendedor" aparece 2 veces | Las reseñas hablan del producto, no del envío ni del vendedor. Antes de usar el modelo en chats o reclamos hay que reentrenar con ese tipo de texto |
 | Fuga | Título y estrellas; además el texto a veces dice "doy tres estrellas" | Título y estrellas excluidos; la mención en el texto queda documentada |
 
 ## Partición

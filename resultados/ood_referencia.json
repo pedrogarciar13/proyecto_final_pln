@@ -1,0 +1,6 @@
+{
+ "emb": "resultados/ood_ref_emb.npy",
+ "umbral_emb": 0.857400119304657,
+ "k": 5,
+ "umbral_cobertura": 0.9090909090909091
+}

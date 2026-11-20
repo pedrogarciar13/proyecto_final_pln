@@ -8,6 +8,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 sys.path.insert(0, os.path.dirname(__file__))
 from resumen import cargar, cifras, corto, n, pct  # noqa: E402
+from informe_texto import POR_ROL, ML, DS, GIA  # noqa: E402
 
 RAIZ = sys.argv[1] if len(sys.argv) > 1 else "."
 r = cargar(RAIZ)
@@ -22,94 +23,103 @@ riesgos = [
      "El sentimiento se deriva de las estrellas; un 3★ puede contener una queja o un elogio.",
      "Alta", "Alto",
      "Reetiquetado humano de una muestra mensual de 300 neutros; abstención en baja confianza; métrica por clase.",
-     "Ciencia de Datos",
+     f"{POR_ROL[DS]} (Ciencia de Datos)",
      f"F1 neutro {n(f['f1_neu'][f['bert']])} ({corto(f['bert'])}) frente a ~0,85 en negativo/positivo.",
      "F1 neutro mensual sobre la muestra reetiquetada", "Media"),
     ("R02", "Datos", "Fuga de información (título, estrellas, duplicados)",
      "El título y las estrellas se escriben junto con la calificación; textos repetidos entre conjuntos.",
      "Media", "Alto",
      "Excluir review_title y review_rate; deduplicar antes de partir; vocabulario/IDF/tokenizador ajustados solo con train.",
-     "Ciencia de Datos",
+     f"{POR_ROL[DS]} (Ciencia de Datos)",
      f"F1 solo título {n(f['audit']['f1_solo_titulo'])} > solo comentario {n(f['audit']['f1_solo_comentario'])}; aserción de no solapamiento en el notebook.",
      "Prueba automática de solapamiento train/test en cada reentrenamiento", "Baja"),
     ("R03", "Privacidad", "Exposición de PII en texto libre",
      "Comentarios con correos, teléfonos o URL que pueden llegar a logs o a terceros.",
      "Baja", "Alto",
      "Enmascaramiento <EMAIL>/<TEL>/<URL> antes de inferir y registrar; acceso por roles; retención de 90 días; sin envío a servicios externos.",
-     "Gerencia de IA",
-     f"PII detectada en la base: {f['audit'].get('pii')}.",
+     f"{POR_ROL[GIA]} (Gerencia en IA)",
+     (lambda P: f"En la base completa: {P.get('EMAIL', 0)} correos, {P.get('URL', 0)} enlaces y {P.get('TEL', 0)} secuencias con forma de teléfono (muchas son años o referencias de producto); todas se enmascaran.")(f["audit"].get("pii", {})),
      "% de textos con PII sin enmascarar en auditoría trimestral", "Baja"),
     ("R04", "Modelo", "Falso negativo crítico (negativo leído como positivo)",
      "El cliente molesto no recibe atención y se pierde la alerta al vendedor.",
      "Media", "Alto",
      "Umbral de abstención elegido en validación para recall de negativo ≥ 0,92; revisión humana de casos dudosos.",
-     "Machine Learning",
+     f"{POR_ROL[ML]} (Machine Learning)",
      f"Negativos leídos como positivos en prueba común: {s4['neg_como_pos'].get(f['bert'])} ({corto(f['bert'])}) vs {s4['neg_como_pos'].get(f['base'])} (base).",
      "Recall de negativo semanal en modo sombra", "Media"),
     ("R05", "Sesgo", "Desempeño desigual por país",
      "Perú y Venezuela tienen menos del 2% de los datos; variaciones regionales del español.",
      "Media", "Medio",
      "Reportar F1 por país; mínimo de F1 por país antes de activar; muestreo adicional de países minoritarios.",
-     "Ciencia de Datos",
+     f"{POR_ROL[DS]} (Ciencia de Datos)",
      f"País con menor F1 (BETO, prueba común): {peor_pais} = {n(paises[peor_pais]['BETO'])}.",
      "F1 macro por país en el tablero mensual", "Media"),
     ("R13", "Sesgo", "Sesgo de longitud: comentarios cortos leídos como negativos",
      "En el corpus casi todos los comentarios de ≤ 15 palabras son negativos; los modelos aprendieron el atajo “corto ⇒ negativo”.",
      "Alta", "Alto",
-     "Sin alertas automáticas al vendedor para textos de ≤ 15 palabras (control en src/demo.py); reentrenar con comentarios cortos "
+     "Sin alertas automáticas al vendedor para textos de ≤ 15 palabras (control en src/servicio.py y en la demo web); reentrenar con comentarios cortos "
      "balanceados (chats etiquetados por agentes); reportar métricas por longitud.",
-     "Ciencia de Datos",
+     f"{POR_ROL[DS]} (Ciencia de Datos)",
      (lambda S: f"{pct(S['pct_negativo_le15'], 0)} de los cortos son negativos; recall de positivos cortos de BETO "
       f"{pct(next(m['recall positivo'] for m in S['modelos'] if m['modelo'] == 'BETO' and m['segmento'].startswith('≤')), 0)}."
       )(f["sesgo"]) if f["sesgo"] else "Ver sección 8.1 del notebook.",
      "Recall de positivos y precisión de alertas en textos cortos (muestra semanal)", "Media"),
+    ("R14", "Datos", "Cambio de dominio: reseñas de producto frente a reclamos de posventa",
+     "El corpus casi no menciona envíos ni vendedores (0 veces \"llegó\", 2 veces \"vendedor\" en 487 mil reseñas); los chats y reclamos sí.",
+     "Alta", "Alto",
+     "Usar el modelo solo sobre reseñas en el piloto (el control de dominio no separa estas quejas, se parecen a una reseña negativa); etiquetar 2.000 conversaciones de posventa y reentrenar antes de ampliar a chats.",
+     f"{POR_ROL[DS]} (Ciencia de Datos)",
+     "Conteo de palabras en el corpus (sección 1.4 del notebook) y ejemplos de la demo.",
+     "Proporción de textos marcados como fuera de dominio por canal", "Media"),
     ("R06", "Operación", "Deriva del lenguaje (drift)",
      "Productos nuevos, jerga, temporadas (Hot Sale, Black Friday) y cambio de canal (chats, reclamos).",
      "Alta", "Medio",
      "Monitorear % OOV/subpalabras por palabra, distribución de confianza y tasa de abstención; reentrenar si la abstención sube 10 pp.",
-     "Machine Learning",
+     f"{POR_ROL[ML]} (Machine Learning)",
      f"OOV en validación del vocabulario RNN: {pct(f['audit'].get('oov_val'), 2)}.",
      "Tasa de abstención, OOV y distribución de clases semanal", "Media"),
     ("R07", "Operación", "Latencia o costo de BETO en CPU",
      "Transformer de 110 M de parámetros sin GPU.",
      "Media", "Medio",
      "Cuantización int8, lotes, max_length por percentiles; procesamiento por lotes horarios; TF-IDF como respaldo.",
-     "Machine Learning",
+     f"{POR_ROL[ML]} (Machine Learning)",
      f"p95 1 comentario: BETO {n(f['p95'].get('BETO'), 1)} ms; BETO int8 {n(f['p95'].get('BETO int8'), 1)} ms; TF-IDF {n(f['p95'][f['base']], 2)} ms.",
      "Latencia p95 y costo por millón de comentarios", "Baja"),
     ("R08", "Modelo", "Sobreconfianza (probabilidades mal calibradas)",
      "Softmax suele dar confianzas altas aun cuando se equivoca; la abstención depende de esa confianza.",
      "Media", "Medio",
      "Temperature scaling ajustado en validación; ECE en el tablero; recalibrar en cada reentrenamiento.",
-     "Machine Learning",
+     f"{POR_ROL[ML]} (Machine Learning)",
      f"ECE {corto(f['bert'])}: {n(s4['calibracion'][f['bert']]['ece_antes'])} → {n(s4['calibracion'][f['bert']]['ece_despues'])} tras calibrar.",
      "ECE mensual", "Baja"),
-    ("R09", "Modelo", "Entradas fuera de dominio o adversariales",
-     "Texto sin relación con compras, spam, otro idioma o ironía.",
-     "Media", "Bajo",
-     "Validación de entrada (vacío/corto), abstención por baja confianza, pruebas contrafactuales como regresión automatizada.",
-     "Machine Learning",
-     f"Casos de robustez superados: {s4['robustez']}.",
-     "Suite de contrafactuales en cada versión", "Baja"),
+    ("R09", "Modelo", "Entradas fuera de dominio",
+     "Textos que no son reseñas (spam, otro tema, otro idioma) reciben una etiqueta con alta confianza; la abstención por confianza no los detecta.",
+     "Media", "Alto",
+     "Control previo por similitud con reseñas de entrenamiento (representación de BETO, k = 5, umbral en el percentil 2 de validación); "
+     "lo detectado va a revisión humana; contrafactuales como prueba de regresión.",
+     f"{POR_ROL[ML]} (Machine Learning)",
+     (lambda O: "Detecta {:.0%} de 20 textos ajenos y marca {:.1%} de las reseñas reales.".format(
+         O["tabla"][0]["textos fuera de dominio detectados"], O["tabla"][0]["reseñas de prueba marcadas"]) if O else "Ver sección 7.1 del notebook.")(s4.get("ood")),
+     "Proporción semanal de textos marcados como fuera de dominio", "Media"),
     ("R10", "Gobierno", "Licencia y trazabilidad de datos y checkpoint",
      "MeLiSA tiene licencia 'other'; BETO CC BY 4.0; uso comercial no verificado.",
      "Baja", "Alto",
      "Uso académico; revisión legal antes de producción; versionar checkpoint, tokenizer, datos, split, semilla y umbral (model card).",
-     "Gerencia de IA",
+     f"{POR_ROL[GIA]} (Gerencia en IA)",
      "LICENSE y data/README.md documentan origen y licencia.",
      "Checklist de aprobación de uso previsto", "Baja"),
     ("R11", "Adopción", "Automatización sin control humano",
      "Uso de la etiqueta para sancionar vendedores o compradores.",
      "Baja", "Alto",
      "El modelo solo prioriza y alerta; ninguna sanción automática; agente confirma antes de actuar; registro de decisiones.",
-     "Gerencia de IA",
+     f"{POR_ROL[GIA]} (Gerencia en IA)",
      "Política de uso en el informe (sección 6) y en la data card (usos no previstos).",
      "% de alertas confirmadas por un agente", "Baja"),
     ("R12", "Seguridad", "Dependencia de descargas externas (Hugging Face)",
      "El checkpoint o el tokenizador cambian o dejan de estar disponibles.",
      "Baja", "Medio",
      "Fijar versión/commit del checkpoint, copia interna de artefactos, sin credenciales en el código (.env.example).",
-     "Machine Learning",
+     f"{POR_ROL[ML]} (Machine Learning)",
      "requirements.txt con versiones; artefactos en modelos/.",
      "Hash del artefacto desplegado", "Baja"),
 ]
@@ -119,7 +129,7 @@ ws = wb.active
 ws.title = "Matriz de riesgos"
 enc = ["ID", "Categoría", "Riesgo", "Causa", "Probabilidad", "Impacto", "Nivel inherente", "Control", "Responsable",
        "Evidencia (del notebook)", "Indicador de monitoreo", "Riesgo residual"]
-anchos = [6, 12, 30, 40, 13, 10, 12, 52, 17, 48, 34, 13]
+anchos = [6, 12, 30, 40, 13, 10, 12, 52, 26, 48, 34, 13]
 azul = PatternFill("solid", fgColor="0B2E59")
 borde = Border(*(Side(style="thin", color="CBD5E1"),) * 4)
 colores = {"Bajo": "D1FAE5", "Baja": "D1FAE5", "Medio": "FEF3C7", "Media": "FEF3C7", "Alto": "FEE2E2", "Alta": "FEE2E2"}
@@ -132,6 +142,7 @@ for i, w in enumerate(anchos, 1):
     ws.column_dimensions[chr(64 + i)].width = w
     c = ws.cell(3, i)
     c.fill, c.font, c.alignment, c.border = azul, Font(bold=True, color="FFFFFF"), Alignment(wrap_text=True, vertical="center"), borde
+riesgos = sorted(riesgos, key=lambda x: int(x[0][1:]))
 for fila in riesgos:
     rid, cat, ries, causa, prob, imp, ctrl, resp, evid, ind, resid = fila
     nivel = NIVEL[prob] * NIVEL[{"Bajo": "Baja", "Medio": "Media", "Alto": "Alta"}[imp]]
@@ -151,12 +162,12 @@ ws.auto_filter.ref = f"A3:L{ws.max_row}"
 
 ws2 = wb.create_sheet("Suspensión y rollback")
 filas = [("Condición de suspensión o rollback", "Umbral", "Acción", "Responsable"),
-         ("Recall de negativo en modo sombra", "< 0,88 durante 2 semanas", "Volver a TF-IDF + LR y reentrenar", "Machine Learning"),
-         ("Tasa de abstención", "> 35% durante 1 semana", "Revisar drift; ampliar equipo de revisión", "Gerencia de IA"),
-         ("F1 macro por país (muestra reetiquetada)", "< 0,65 en cualquier país", "Desactivar alertas automáticas en ese país", "Ciencia de Datos"),
-         ("Latencia p95", "> 150 ms en línea", "Pasar a procesamiento por lotes o a la versión int8", "Machine Learning"),
-         ("Incidente de privacidad", "Cualquier PII expuesta en logs", "Suspender, purgar logs, auditoría", "Gerencia de IA"),
-         ("Quejas de vendedores por alertas falsas", "Precisión de alertas < 80%", "Subir el umbral y revisar casos", "Gerencia de IA")]
+         ("Recall de negativo en modo sombra", "< 0,88 durante 2 semanas", "Volver a TF-IDF + LR y reentrenar", POR_ROL[ML]),
+         ("Tasa de abstención", "> 35% durante 1 semana", "Revisar drift; ampliar equipo de revisión", POR_ROL[GIA]),
+         ("F1 macro por país (muestra reetiquetada)", "< 0,65 en cualquier país", "Desactivar alertas automáticas en ese país", POR_ROL[DS]),
+         ("Latencia p95", "> 150 ms en línea", "Pasar a procesamiento por lotes o a la versión int8", POR_ROL[ML]),
+         ("Incidente de privacidad", "Cualquier PII expuesta en logs", "Suspender, purgar logs, auditoría", POR_ROL[GIA]),
+         ("Quejas de vendedores por alertas falsas", "Precisión de alertas < 80%", "Subir el umbral y revisar casos", POR_ROL[GIA])]
 for fila in filas:
     ws2.append(fila)
 for i, w in enumerate([42, 30, 50, 20], 1):

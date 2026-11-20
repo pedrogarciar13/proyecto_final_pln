@@ -1,0 +1,10 @@
+concepto,muestreo_actual,modelo
+leidos,100000.0,217400.0
+detectados,40000.0,373960.94
+revision,13333.33,28986.67
+evitadas,2000.0,18698.05
+beneficio,24000.0,224376.56
+computo,0.0,1506.36
+neto,10666.67,193883.54
+implementacion_unica,,20530.0
+neto_incremental_mensual,,183216.87

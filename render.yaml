@@ -1,0 +1,16 @@
+# Despliegue de la demo web en Render (https://render.com) · plan gratuito
+# En el plan gratuito (512 MB de RAM) BETO no cabe: la demo usa TF-IDF + Regresión Logística con la misma política
+# de calibración, abstención, control de fuera de dominio y regla de comentarios cortos. BETO se demuestra en local.
+services:
+  - type: web
+    name: sentimiento-melisa-demo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r app/requirements.txt
+    startCommand: gunicorn app.app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    healthCheckPath: /salud
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MODELO_DEMO
+        value: TF-IDF + Regresión Logística

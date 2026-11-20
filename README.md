@@ -1,111 +1,124 @@
-# Sentimiento en reseñas de Mercado Libre (MeLiSA) · Proyecto final PLN
+# ¿Qué siente el comprador? Sentimiento en reseñas de Mercado Libre
 
-**Universidad Ean · Procesamiento de Lenguaje Natural** · Docente: Gerson José Moreno Morales · Estudiante: Jose Romero
+Proyecto final de **Procesamiento de Lenguaje Natural**, Universidad Ean. Docente: Gerson José Moreno Morales.
 
-¿Un **Transformer preentrenado en español (BETO)** o un **modelo secuencial (RNN/LSTM/GRU)** justifica su mayor costo frente a una
-línea base **TF-IDF + Regresión Logística / SVM** para clasificar el sentimiento (negativo, neutro, positivo) de los comentarios de
-compradores de Mercado Libre, y bajo qué controles se podría adoptar?
+| Integrante | Perfil | En la sustentación |
+|---|---|---|
+| Pedro García Romero | Especialista en Machine Learning | Modelos, BETO, resultados y demo |
+| Carlos Trilleras | Magíster en Ciencia de Datos | Datos, fuga, errores, robustez y sesgo de longitud |
+| Fabiola Aldana Mora | Magíster en Gerencia en IA | Problema, valor, abstención, costo, riesgos y decisión |
 
-| | |
-|---|---|
-| **Usuario** | Analista de experiencia del comprador (Atención al Cliente / Reputación de vendedores) |
-| **Decisión** | Qué comentario atender primero y a qué vendedor enviar una alerta temprana |
-| **Entrada → salida** | Un comentario en español → etiqueta + probabilidad calibrada + decisión automática o revisión humana + evidencia |
-| **Clase crítica** | Negativo (error más costoso: negativo leído como positivo) |
-| **KPI** | Primera respuesta a negativos < 24 h · % de alertas confirmadas · reclamos/devoluciones evitados |
+Queríamos saber si vale la pena usar un Transformer preentrenado en español (BETO) para leer el sentimiento de los compradores, o si
+basta con algo más simple. Comparamos una línea base TF-IDF con regresión logística y SVM, las redes recurrentes de la sesión 3 (RNN,
+LSTM y GRU) y BETO, de la sesión 4, todos sobre la misma partición. Después pensamos cómo llevar el ganador a operación sin que tome
+decisiones que le corresponden a una persona.
 
-## Resultados
+- **Usuario:** el analista de experiencia del comprador.
+- **Decisión:** qué comentario atender primero y a qué vendedor avisarle a tiempo.
+- **Entrada y salida:** un comentario en español entra; sale la etiqueta, una probabilidad calibrada, la decisión (automática o revisión humana) y las palabras que más pesaron.
+- **Clase crítica:** negativo. Lo peor que puede pasar es leer como positivo a un cliente molesto.
 
-Todos los modelos usan la misma partición (70/15/15, semilla 42). La comparación final se hace sobre una **prueba común de 5.000
-comentarios**; los modelos de la sesión 3 también se reportan sobre la prueba completa (72.994) en el notebook.
+## Lo que encontramos
 
-| Modelo | Datos de entrenamiento | F1 macro (prueba común) | F1 neutro | Recall negativo | p95 por comentario (CPU) |
+Todos los modelos se compararon sobre la misma prueba de 5.000 comentarios:
+
+| Modelo | Datos de entrenamiento | F1 macro | F1 neutro | Recall negativo | p95 por comentario (CPU) |
 |---|---:|---:|---:|---:|---:|
-| **BETO** (fine-tuning, sesión 4) | 16.000 | **0,793** | **0,624** | 0,854 | 150,1 ms |
+| **BETO** | 16.000 | **0,793** | **0,624** | 0,854 | 150,1 ms |
 | BETO int8 (cuantizado) | 16.000 | 0,773 | 0,592 | 0,876 | 121,3 ms |
-| LSTM (sesión 3) | 340.634 | 0,766 | 0,578 | 0,833 | 4,9 ms |
-| GRU (campeón recurrente por validación) | 340.634 | 0,758 | 0,584 | 0,824 | 6,5 ms |
+| LSTM | 340.634 | 0,766 | 0,578 | 0,833 | 4,9 ms |
+| GRU (mejor recurrente en validación) | 340.634 | 0,758 | 0,584 | 0,824 | 6,5 ms |
 | RNN | 340.634 | 0,753 | 0,569 | 0,798 | 4,4 ms |
-| TF-IDF + Regresión Logística (línea base) | 340.634 | 0,742 | 0,556 | 0,798 | 1,1 ms |
+| TF-IDF + regresión logística | 340.634 | 0,742 | 0,556 | 0,798 | 1,1 ms |
 | TF-IDF + SVM lineal | 340.634 | 0,721 | 0,481 | 0,851 | 1,1 ms |
-| TF-IDF + LR con el mismo subconjunto que BETO | 16.000 | 0,704 | 0,493 | 0,785 | 1,4 ms |
+| TF-IDF + LR con los mismos datos que BETO | 16.000 | 0,704 | 0,493 | 0,785 | 1,4 ms |
 
-- **BETO − GRU = +0,035 de F1 macro, IC 95% [0,024; 0,045]**: la diferencia es significativa (bootstrap de 1.000 remuestreos).
-- Con calibración por temperatura y un umbral de abstención de 0,69, **BETO decide solo el 78,3%** de los comentarios con **recall de
-  negativo 0,922**; el resto pasa a revisión humana.
-- **Hallazgo de datos: sesgo de longitud.** El 93,8% de los comentarios de 15 palabras o menos son negativos. Los modelos aprendieron
-  "corto ⇒ negativo": BETO recupera solo el 9,5% de los positivos cortos.
-- **Criterio de la sesión 4:** ningún modelo cumple los cuatro requisitos a la vez. BETO falla la latencia por 0,1 ms en un portátil
-  sin GPU y BETO int8 mejora solo +0,014.
-- **Decisión del comité:** piloto de BETO en **modo sombra**, por lotes horarios y con abstención. Los comentarios cortos no disparan
-  alertas automáticas al vendedor y TF-IDF + LR queda como respaldo. Detalle en `resultados/decision.json` y en la sección 9 del notebook.
+- La ventaja de BETO sobre GRU es de **+0,035 de F1 (IC 95% [0,024; 0,045])**, y la logra con veinte veces menos datos.
+- **Abstención:** con probabilidades calibradas y un umbral de 0,69, BETO decide solo el **78%** de los comentarios con recall de negativo **0,92**. El resto lo revisa una persona.
+- **Fuera de dominio:** un control previo compara cada texto con reseñas reales. Detectó los 20 textos ajenos que probamos (deportes, recetas, código, otros idiomas) y marca el 2,7% de las reseñas reales.
+- **El hallazgo que más nos sorprendió:** el 94% de los comentarios de 15 palabras o menos son negativos, porque los autores del corpus seleccionaron reseñas largas. Los modelos aprendieron que "corto" es casi lo mismo que "queja". Por eso los comentarios cortos nunca disparan una alerta automática.
+- **Decisión:** proponemos un piloto de BETO en modo sombra, por lotes y con abstención, con TF-IDF como respaldo. El detalle está en la sección 9 del notebook y en `resultados/decision.json`.
 
-## Estructura del repositorio
+## Demostración
+
+**En el navegador (recomendado para la sustentación).** La interfaz muestra el flujo completo: enmascarar datos personales, revisar si
+el texto es una reseña, clasificar, aplicar el umbral y explicar la decisión.
+```bash
+pip install -r requirements.txt
+python app/app.py            # abre http://localhost:5000
 ```
-├── Proyecto_PLN_Sentimiento_MeLiSA.ipynb   Notebook principal, ejecutado de inicio a fin (EDA → baseline → RNN → BETO → evaluación → demo)
+Si existe la carpeta `modelos/` (la genera el notebook), la demo usa BETO. Si no, usa TF-IDF con la misma política de decisión.
+
+**En la terminal:**
+```bash
+python src/demo.py "Me llegó el cargador y a la semana dejó de funcionar, y el vendedor nunca respondió"
+```
+
+**En Render.** El archivo `render.yaml` despliega la demo web como servicio gratuito: en Render, *New → Blueprint* y se elige este
+repositorio. El plan gratuito tiene 512 MB de memoria y BETO no cabe, así que en Render la demo usa TF-IDF + regresión logística (el
+modelo va en `app/modelo/`) con la misma calibración, abstención y regla de comentarios cortos. Para mostrar BETO en línea se
+necesita un plan de al menos 2 GB o un Space de Hugging Face.
+
+## Qué hay en el repositorio
+```
+├── Proyecto_PLN_Sentimiento_MeLiSA.ipynb   Notebook principal, ejecutado de principio a fin
+├── app/                                    Demo web (Flask): app.py, plantilla HTML y modelo liviano para Render
 ├── data/
-│   ├── README.md                             Data card, diccionario de datos, origen, licencia y limitaciones
-│   └── muestra_melisa_estratificada.csv      Muestra controlada (5.001 reseñas, PII enmascarada)
+│   ├── README.md                           Data card: origen, periodo, diccionario, auditoría, limitaciones
+│   └── muestra_melisa_estratificada.csv    Muestra de 5.001 reseñas con datos personales enmascarados
 ├── src/
-│   ├── demo.py                               Demostración del flujo completo desde la terminal
-│   ├── crear_muestra.py                      Genera la muestra controlada desde la base completa
-│   ├── generar_presentacion.py               docs/Presentacion_Proyecto_PLN.pptx desde los resultados
-│   ├── generar_informe.py                    docs/Informe_Tecnico_Proyecto_PLN.docx desde los resultados
-│   ├── generar_matriz_riesgos.py             docs/Matriz_Riesgos.xlsx desde los resultados
-│   ├── generar_guion.py                      Guion por rol y notas del orador de la presentación
-│   └── resumen.py                            Lectura de resultados compartida
-├── resultados/                               Métricas (resultados.json, tablas CSV) y figuras del notebook
-├── docs/                                     Entregables: presentación, informe técnico y matriz de riesgos
-├── modelos/                                  Artefactos entrenados (no se versionan: se regeneran al ejecutar el notebook)
-├── requirements.txt · .env.example · LICENSE
+│   ├── servicio.py                         Lógica de decisión compartida por la demo web y la de terminal
+│   ├── demo.py                             Demo por terminal
+│   ├── crear_muestra.py                    Genera la muestra de data/
+│   ├── generar_presentacion.py             Presentación desde resultados/resultados.json
+│   ├── generar_informe.py                  Informe técnico desde resultados/resultados.json
+│   ├── generar_matriz_riesgos.py           Matriz de riesgos
+│   └── generar_guion.py                    Guion de la sustentación y notas del orador
+├── resultados/                             Métricas, figuras, decisión del comité y referencia del control de dominio
+├── docs/                                   Presentación, informe, guion y matriz de riesgos
+├── render.yaml                             Despliegue de la demo en Render
+└── requirements.txt · .env.example · LICENSE
 ```
 
-## Entregables del proyecto final
+## Entregables
 | N.º | Entregable | Dónde |
 |---|---|---|
-| 1 | Repositorio con código, README, dependencias y licencia | Este repositorio · `requirements.txt` · `LICENSE` |
-| 2 | Notebook principal ejecutado de inicio a fin | [`Proyecto_PLN_Sentimiento_MeLiSA.ipynb`](Proyecto_PLN_Sentimiento_MeLiSA.ipynb) |
-| 3 | Dataset o muestra controlada + diccionario y origen | [`data/`](data/) |
-| 4 | Informe técnico (DOCX) | [`docs/Informe_Tecnico_Proyecto_PLN.docx`](docs/Informe_Tecnico_Proyecto_PLN.docx) |
-| 5 | Presentación final (PPTX, 18 diapositivas con notas por rol) | [`docs/Presentacion_Proyecto_PLN.pptx`](docs/Presentacion_Proyecto_PLN.pptx) |
-| 5b | Guion de la sustentación por rol (20 min, preguntas preparadas) | [`docs/Guion_Sustentacion_por_Rol.docx`](docs/Guion_Sustentacion_por_Rol.docx) |
-| 6 | Matriz de riesgos (XLSX) | [`docs/Matriz_Riesgos.xlsx`](docs/Matriz_Riesgos.xlsx) |
-| 7 | Demostración | `python src/demo.py "texto"` y sección 10 del notebook |
+| 1 | Repositorio con código, README, dependencias y licencia | Este repositorio |
+| 2 | Notebook principal | [`Proyecto_PLN_Sentimiento_MeLiSA.ipynb`](Proyecto_PLN_Sentimiento_MeLiSA.ipynb) |
+| 3 | Muestra de datos, diccionario y origen | [`data/`](data/) |
+| 4 | Informe técnico | [`docs/Informe_Tecnico_Proyecto_PLN.docx`](docs/Informe_Tecnico_Proyecto_PLN.docx) |
+| 5 | Presentación (18 diapositivas) y guion por rol | [`docs/Presentacion_Proyecto_PLN.pptx`](docs/Presentacion_Proyecto_PLN.pptx) · [`docs/Guion_Sustentacion_por_Rol.docx`](docs/Guion_Sustentacion_por_Rol.docx) |
+| 6 | Matriz de riesgos | [`docs/Matriz_Riesgos.xlsx`](docs/Matriz_Riesgos.xlsx) |
+| 7 | Demostración | `python app/app.py` (web), `python src/demo.py` (terminal) y sección 10 del notebook |
 
 ## Cómo reproducirlo
-Requisitos: Python 3.11. Probado en Windows 11 con CPU (12 hilos, 16 GB de RAM, sin GPU).
+Usamos Python 3.11 en un portátil con Windows 11, 12 hilos de CPU, 16 GB de RAM y sin GPU. La corrida completa del notebook tomó
+unas tres horas; casi todo ese tiempo se fue en ajustar BETO.
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate          # Linux/Mac: source .venv/bin/activate
+.venv\Scripts\activate          # en Linux o Mac: source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-1. **Datos.** Descargue MeLiSA (Hugging Face: `lpsc-fiuba/melisa`), conserve los sitios en español (todos menos `MLB`, Brasil),
-   agregue la columna `sentimiento` (1–2★ negativo, 3★ neutro, 4–5★ positivo) y guárdela como `data/data_melisa_comentarios.csv`
-   con las columnas `id, country, category, review_content, review_title, review_rate, sentimiento` (136 MB; no se sube por el
-   límite de GitHub).
-   Sin ese archivo el notebook usa automáticamente `data/muestra_melisa_estratificada.csv`.
-2. **Notebook.** Ejecútelo de inicio a fin (Jupyter, VS Code o `jupyter nbconvert --to notebook --execute --inplace
-   Proyecto_PLN_Sentimiento_MeLiSA.ipynb`). Los parámetros se cambian con variables de entorno (ver `.env.example`); por ejemplo,
-   `FRACCION=0.05` hace una corrida rápida. La primera ejecución descarga BETO (~440 MB) de Hugging Face.
-3. **Demo.** `python src/demo.py "El cargador dejó de funcionar a la semana"` o `python src/demo.py` para el modo interactivo.
-4. **Documentos.** `python src/generar_presentacion.py`, `python src/generar_informe.py` y `python src/generar_matriz_riesgos.py`
-   regeneran los entregables de `docs/` a partir de `resultados/resultados.json`.
+1. **Datos.** Descarguen MeLiSA de Hugging Face (`lpsc-fiuba/melisa`), dejen solo los sitios en español (todos menos `MLB`),
+   agreguen la columna `sentimiento` (1–2★ negativo, 3★ neutro, 4–5★ positivo) y guárdenla como
+   `data/data_melisa_comentarios.csv`, con las columnas `id, country, category, review_content, review_title, review_rate,
+   sentimiento`. Son 136 MB y GitHub no los acepta. Si el archivo no está, el notebook usa la muestra de `data/`.
+2. **Notebook.** Ejecútenlo completo. Los parámetros se cambian con variables de entorno (`.env.example`); con `FRACCION=0.05` se
+   hace una corrida rápida de prueba. La primera vez descarga BETO (~440 MB).
+3. **Documentos.** Los scripts de `src/generar_*.py` regeneran la presentación, el informe, la matriz y el guion a partir de
+   `resultados/resultados.json`.
 
-Semilla 42 en todo el flujo. La prueba se usa una sola vez; C, épocas, temperatura, umbral y modelo campeón se eligen en validación.
+Usamos la semilla 42 en todo. La prueba se mira una sola vez: C, épocas, temperatura, umbral y modelo campeón se eligen en validación.
 
-## Datos
-MeLiSA (*Mercado Libre for Sentiment Analysis*), LPSC-FIUBA, Universidad de Buenos Aires. **Datos reales y públicos**, licencia
-"other", usados con fines académicos. Detalle completo, auditoría, PII, fuga y usos no previstos en [`data/README.md`](data/README.md).
+## Datos y licencias
+MeLiSA (LPSC-FIUBA, Universidad de Buenos Aires) son reseñas reales y públicas recolectadas entre agosto de 2020 y enero de 2021, con
+licencia "other"; las usamos con fines académicos. El código del repositorio es MIT. BETO (CC BY 4.0) y MeLiSA conservan sus
+licencias. Más detalle en [`data/README.md`](data/README.md) y [`LICENSE`](LICENSE).
 
-## Licencia
-Código bajo licencia MIT. Los datos (MeLiSA) y el modelo preentrenado (BETO, CC BY 4.0) conservan sus licencias originales; ver
-[`LICENSE`](LICENSE).
-
-## Declaración de uso de IA generativa
-Se usó un asistente de IA (Claude, de Anthropic) para estructurar el código del notebook, redactar borradores de documentación y
-escribir los scripts que generan la presentación, el informe y la matriz de riesgos. Todas las cifras provienen de la ejecución del
-notebook (`resultados/resultados.json`) y fueron verificadas por el equipo; no se presenta como evidencia nada que no se haya ejecutado.
-No se enviaron datos confidenciales a servicios externos (el corpus es público). El equipo mantiene la responsabilidad y la autoría de las
-decisiones de diseño, la interpretación y la recomendación.
+## Uso de IA generativa
+Como pide el curso, lo declaramos: usamos Claude (Anthropic) como asistente de programación para depurar y organizar el código,
+escribir los scripts que generan los documentos y revisar la redacción. Las decisiones de diseño, la interpretación de los
+resultados, la revisión manual de errores y la recomendación son nuestras. Todas las cifras salen de la ejecución del notebook y las
+verificamos. No enviamos datos confidenciales a ningún servicio externo: el corpus es público.

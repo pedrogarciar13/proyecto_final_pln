@@ -1,14 +1,15 @@
 {
  "modelo": "BETO",
  "titulo": "Piloto condicionado de BETO en modo sombra",
- "texto": "Pilotear BETO en modo sombra, procesando por lotes horarios, con abstención (umbral 0,69 sobre probabilidades calibradas): en la prueba común decide solo el 78% de los comentarios con recall de negativo 0,92. Por el sesgo de longitud del corpus, los comentarios de 15 palabras o menos no generan alertas automáticas al vendedor. TF-IDF + LR queda como respaldo explicable.",
- "texto_corto": "Pilotear BETO en modo sombra, por lotes y con abstención; los comentarios cortos no disparan alertas automáticas y TF-IDF + LR queda como respaldo.",
- "por_que": "BETO es el único modelo que mejora al campeón recurrente (GRU) en más de 0,02 de F1 macro con significancia estadística (+0,035; IC 95% [0,024; 0,045]) y cumple recall crítico (0,922) y cobertura (78,3%). Su latencia p95 en un portátil sin GPU (150,1 ms) queda en el límite de 150 ms, que no es una restricción en procesamiento por lotes; para uso en línea se usa la versión int8 (121 ms) o una GPU.",
- "criterio_estricto": "Con el criterio estricto de la sesión 4 ninguna variante cumple los cuatro requisitos a la vez: BETO falla la latencia por 0,1 ms y BETO int8 mejora solo 0,014 de F1. Por eso la adopción es condicionada y en modo sombra, no un despliegue.",
+ "texto": "Pilotear BETO en modo sombra, procesando por lotes horarios, con abstención (umbral 0,69 sobre probabilidades calibradas): en la prueba común decide solo el 78% de los comentarios con recall de negativo 0,92. Los textos que no parecen reseñas van a revisión humana y los comentarios de 15 palabras o menos no generan alertas automáticas al vendedor. TF-IDF + LR queda como respaldo explicable.",
+ "texto_corto": "Pilotear BETO en modo sombra, por lotes y con abstención; los textos fuera de dominio van a revisión, los comentarios cortos no disparan alertas y TF-IDF + LR queda como respaldo.",
+ "por_que": "BETO es el único modelo que mejora al campeón recurrente (GRU) en más de 0,02 de F1 macro con significancia estadística (+0,035; IC 95% [0,024; 0,045]) y cumple recall crítico (0,922), cobertura (78,3%) y capacidad en lote. Su latencia p95 en un portátil sin GPU (150,1 ms) queda en el límite de 150 ms, que no es una restricción en procesamiento por lotes; para uso en línea se usa la versión int8 (121 ms) o una GPU.",
+ "criterio_estricto": "Con el criterio estricto de la sesión 4 ninguna variante cumple los cuatro requisitos a la vez: BETO falla la latencia en línea por 0,1 ms y BETO int8 mejora solo 0,014 de F1. Por eso la adopción es condicionada y en modo sombra, no un despliegue.",
  "condiciones": [
   "Procesamiento por lotes horarios; si se requiere tiempo real, BETO int8 o GPU con p95 ≤ 150 ms medido en el entorno de despliegue.",
+  "Control de fuera de dominio antes de clasificar: lo que no se parece a una reseña va a revisión humana.",
   "Comentarios de ≤ 15 palabras: se priorizan, pero no disparan alertas automáticas al vendedor hasta reentrenar con comentarios cortos balanceados (hoy el 94% de los cortos del corpus son negativos).",
   "Modo sombra de 4 semanas: recall de negativo ≥ 0,92, cobertura ≥ 75% y precisión de alertas ≥ 80% sobre comentarios revisados por agentes.",
-  "Respaldo y reversión inmediata a TF-IDF + Regresión Logística (explicable, < 2 ms por comentario)."
+  "Respaldo y reversión inmediata a TF-IDF + Regresión Logística (explicable, cerca de 1 ms por comentario)."
  ]
 }

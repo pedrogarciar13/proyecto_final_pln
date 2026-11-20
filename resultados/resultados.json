@@ -224,6 +224,20 @@
      "BETO": "positivo (0.98)"
     }
    ]
+  },
+  "vocabulario_posventa": {
+   "producto": 120267,
+   "calidad": 106222,
+   "material": 27169,
+   "funciona": 32055,
+   "paquete": 1724,
+   "devolución": 1187,
+   "vendedor": 2,
+   "llegó": 0,
+   "envío": 0,
+   "entrega": 0,
+   "servicio": 0,
+   "atención": 0
   }
  },
  "resultados_s3": {
@@ -1491,7 +1505,7 @@
     "p95": 1.3938399990365722,
     "thr": 13955.45592914307,
     "params": 103353,
-    "mb": null,
+    "mb": 1.180757,
     "n_train": 16000
    },
    "BETO": {
@@ -3207,7 +3221,7 @@
     "p95 ms": 1.3938399990365722,
     "coment./s": 13955.45592914307,
     "parámetros (M)": 0.103353,
-    "tamaño (MB)": NaN,
+    "tamaño (MB)": 1.180757,
     "memoria pesos fp32 (MB)": 0.413412,
     "USD por millón": 0.0039809201388783955,
     "dominado": true
@@ -3274,9 +3288,9 @@
    }
   ],
   "robustez": {
-   "TF-IDF + Regresión Logística": 10,
-   "GRU": 7,
-   "BETO": 7
+   "TF-IDF + Regresión Logística": 11,
+   "GRU": 8,
+   "BETO": 10
   },
   "casos_robustez": [
    {
@@ -3284,104 +3298,228 @@
     "texto": "El producto es excelente, lo recomiendo",
     "esperado": "positivo",
     "TF-IDF + Regresión Logística": "positivo (0.99)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (0.84)",
-    "BETO": "negativo (0.90)"
+    "estado_GRU": "falla",
+    "BETO": "negativo (0.90)",
+    "estado_BETO": "falla",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "negación",
     "texto": "El producto no es excelente, no lo recomiendo",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (0.99)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (1.00)",
-    "BETO": "negativo (0.98)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.98)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "contraste",
     "texto": "Pensé que sería malo, pero es excelente",
     "esperado": "positivo",
     "TF-IDF + Regresión Logística": "positivo (0.49) → revisión",
+    "estado_TF-IDF + Regresión Logística": "se abstiene",
     "GRU": "negativo (0.68) → revisión",
-    "BETO": "negativo (0.92)"
+    "estado_GRU": "se abstiene",
+    "BETO": "negativo (0.92)",
+    "estado_BETO": "falla",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "contraste",
     "texto": "Pensé que sería excelente, pero es malo",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "neutro (0.53) → revisión",
+    "estado_TF-IDF + Regresión Logística": "se abstiene",
     "GRU": "negativo (0.97)",
-    "BETO": "negativo (0.98)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.98)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "ortografía",
     "texto": "exelente producto, lo recomiendo muxo",
     "esperado": "positivo",
     "TF-IDF + Regresión Logística": "negativo (0.91)",
+    "estado_TF-IDF + Regresión Logística": "falla",
     "GRU": "negativo (0.91)",
-    "BETO": "negativo (0.95)"
+    "estado_GRU": "falla",
+    "BETO": "negativo (0.95)",
+    "estado_BETO": "falla",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "ortografía",
     "texto": "pesimo, no sirbe para nada",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (1.00)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (1.00)",
-    "BETO": "negativo (0.98)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.98)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "mayúsculas",
     "texto": "PÉSIMO, NO SIRVE, QUIERO MI DINERO",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (1.00)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (1.00)",
-    "BETO": "negativo (0.97)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.97) → revisión",
+    "estado_BETO": "se abstiene",
+    "fuera de dominio (BETO)": true
    },
    {
     "caso": "emoji",
     "texto": "Llegó roto 😡😡",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (1.00)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (0.91)",
-    "BETO": "negativo (0.98)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.98)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "ironía",
     "texto": "Genial, llegó roto y dos semanas tarde",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (0.97)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (0.96)",
-    "BETO": "negativo (0.97)"
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.97)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "neutro",
     "texto": "Cumple, aunque la tela es más delgada de lo que esperaba",
     "esperado": "neutro",
     "TF-IDF + Regresión Logística": "neutro (0.66) → revisión",
+    "estado_TF-IDF + Regresión Logística": "se abstiene",
     "GRU": "negativo (0.61) → revisión",
-    "BETO": "negativo (0.74)"
+    "estado_GRU": "se abstiene",
+    "BETO": "negativo (0.74)",
+    "estado_BETO": "falla",
+    "fuera de dominio (BETO)": false
    },
    {
     "caso": "larga",
     "texto": "Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Lo compré para mi hija. Al final no funcionó y el vendedor nunca respondió",
     "esperado": "negativo",
     "TF-IDF + Regresión Logística": "negativo (0.82)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (0.58) → revisión",
-    "BETO": "negativo (0.56) → revisión"
+    "estado_GRU": "se abstiene",
+    "BETO": "negativo (0.56) → revisión",
+    "estado_BETO": "se abstiene",
+    "fuera de dominio (BETO)": true
    },
    {
     "caso": "fuera de dominio",
     "texto": "La fotosíntesis depende de la energía solar",
     "esperado": "abstención",
     "TF-IDF + Regresión Logística": "negativo (0.48) → revisión",
+    "estado_TF-IDF + Regresión Logística": "acierta",
     "GRU": "negativo (0.91)",
-    "BETO": "negativo (0.94)"
+    "estado_GRU": "falla",
+    "BETO": "negativo (0.94) → revisión",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": true
    },
    {
     "caso": "fuera de dominio",
     "texto": "asdf qwerty 12345",
     "esperado": "abstención",
     "TF-IDF + Regresión Logística": "negativo (0.96)",
+    "estado_TF-IDF + Regresión Logística": "falla",
     "GRU": "negativo (0.79)",
-    "BETO": "negativo (0.90)"
+    "estado_GRU": "falla",
+    "BETO": "negativo (0.90) → revisión",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": true
+   },
+   {
+    "caso": "negación (larga)",
+    "texto": "El producto es excelente, llegó bien empacado, funciona como dice la descripción y lo recomiendo a quien lo necesite",
+    "esperado": "positivo",
+    "TF-IDF + Regresión Logística": "positivo (0.95)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
+    "GRU": "positivo (0.66) → revisión",
+    "estado_GRU": "se abstiene",
+    "BETO": "positivo (0.65) → revisión",
+    "estado_BETO": "se abstiene",
+    "fuera de dominio (BETO)": false
+   },
+   {
+    "caso": "negación (larga)",
+    "texto": "El producto no es excelente, llegó mal empacado, no funciona como dice la descripción y no lo recomiendo a nadie",
+    "esperado": "negativo",
+    "TF-IDF + Regresión Logística": "negativo (1.00)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
+    "GRU": "negativo (0.93)",
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.96)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
+   },
+   {
+    "caso": "contraste (largo)",
+    "texto": "Pensé que sería malo porque el precio era muy bajo, pero es excelente, resistente y llegó antes de lo esperado",
+    "esperado": "positivo",
+    "TF-IDF + Regresión Logística": "positivo (0.60) → revisión",
+    "estado_TF-IDF + Regresión Logística": "se abstiene",
+    "GRU": "neutro (0.71)",
+    "estado_GRU": "falla",
+    "BETO": "neutro (0.76)",
+    "estado_BETO": "falla",
+    "fuera de dominio (BETO)": false
+   },
+   {
+    "caso": "contraste (largo)",
+    "texto": "Pensé que sería excelente porque tenía buenas opiniones, pero es malo, se rompió rápido y el vendedor no respondió",
+    "esperado": "negativo",
+    "TF-IDF + Regresión Logística": "negativo (0.81)",
+    "estado_TF-IDF + Regresión Logística": "acierta",
+    "GRU": "negativo (0.70)",
+    "estado_GRU": "acierta",
+    "BETO": "negativo (0.85)",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": false
+   },
+   {
+    "caso": "ortografía (larga)",
+    "texto": "exelente producto, yego rapido y funsiona muy bien, lo recomiendo muxo a todos los que quieran uno igual",
+    "esperado": "positivo",
+    "TF-IDF + Regresión Logística": "positivo (0.62) → revisión",
+    "estado_TF-IDF + Regresión Logística": "se abstiene",
+    "GRU": "neutro (0.52) → revisión",
+    "estado_GRU": "se abstiene",
+    "BETO": "positivo (0.81) → revisión",
+    "estado_BETO": "se abstiene",
+    "fuera de dominio (BETO)": true
+   },
+   {
+    "caso": "fuera de dominio (largo)",
+    "texto": "El partido terminó dos a uno y el delantero fue expulsado en el segundo tiempo por una falta muy fuerte",
+    "esperado": "abstención",
+    "TF-IDF + Regresión Logística": "negativo (0.78)",
+    "estado_TF-IDF + Regresión Logística": "falla",
+    "GRU": "negativo (0.76)",
+    "estado_GRU": "falla",
+    "BETO": "negativo (0.92) → revisión",
+    "estado_BETO": "acierta",
+    "fuera de dominio (BETO)": true
    }
   ],
   "segmentos": {
@@ -3650,108 +3788,76 @@
    "BETO int8": 12
   },
   "errores_causas": {
-   "frontera con neutro (3★ ambiguo)": 830,
+   "contraste": 417,
+   "negación": 271,
+   "frontera con neutro (3★ ambiguo)": 123,
+   "texto corto (sesgo de longitud)": 57,
    "menciona estrellas": 25,
-   "etiqueta ruidosa / ironía": 18,
-   "contraste": 12,
-   "negación": 9,
-   "texto muy corto": 5
+   "otro / etiqueta ruidosa": 6
   },
   "errores_muestra": [
    {
-    "texto": "Me hizo sangrar la piel, me cortó. Afeita muy bien, pero los peines que traen son demasiado cortos, para \"recortar\" es casi lo mismo que afeitar. Tenía otra afeitadora philips y el peine de 2mm no me lo dejaba tan corto como esta, fue como quitarme la barba.",
-    "review_rate": 4,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.5346287488937378,
-    "causa": "contraste"
-   },
-   {
-    "texto": "Muy bueno pero las cartas algunas son muy malas.",
-    "review_rate": 4,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.9945492148399353,
-    "causa": "contraste"
-   },
-   {
-    "texto": "Lo compré para mi perrita fox terrier adulta y le gustó. Al poco tiempo murió y se la dimos a nuestra cachorra airdale terrier (con permiso del veterinario, suplementándole con un huevo, por ser cachorra). Se acabó y compré esta misma marca, pero para cachorros.",
+    "texto": "El cable esta bien, lo compre para comprobar si mi controlador funcionaba aun, conectando el midi ya que con el usb (impresora) ya no funcionaba. El controlador estaba malo, pero el cable midi, esta bien.",
     "review_rate": 5,
     "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.6701879501342773,
+    "BETO": "neutro",
+    "conf_BETO": 0.7365855574607849,
     "causa": "contraste"
    },
    {
-    "texto": "Hace 1 año q vengo luchando contra las cucas! probé de todo hasta un spray q lo pones y x 3hs te tener q ir de tu casa. No me funcionó nada hasta q compre este gel. En 48hs no se vieron más y aparecieron patas para arriba. Hace 2 semana q lo compre y no hay ninguna. A todo esto use realmente poco gel así q dentro de 2 semana pondre otra vez para reforzar. Es caro pero si vivís gastando cosas como yo es mejor ir a lo seguro.",
-    "review_rate": 5,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.5210055112838745,
+    "texto": "No leí bien y terminé comprando un whiskey. Sabe parecido al jack daniels tradicional así que en realidad es bourbon. No soy para nada fanático del bourbon, pero para tomar con café o para adobar carne es maravilloso.",
+    "review_rate": 3,
+    "sentimiento": "neutro",
+    "BETO": "positivo",
+    "conf_BETO": 0.7410821318626404,
     "causa": "contraste"
    },
    {
-    "texto": "Buena relacion precio-calidad graba como celular de los del 2008 mas o menos.",
-    "review_rate": 4,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.6001667380332947,
-    "causa": "etiqueta ruidosa / ironía"
-   },
-   {
-    "texto": "Antes sabia mas a chilitos. En general aun asi es un gran producto.",
-    "review_rate": 4,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.6429449319839478,
-    "causa": "etiqueta ruidosa / ironía"
-   },
-   {
-    "texto": "Muy lindo novedoso, la niña se divierte mucho.",
-    "review_rate": 4,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.9829866886138916,
-    "causa": "etiqueta ruidosa / ironía"
-   },
-   {
-    "texto": "Perfecto, en buen estado, ideal para apuntes.",
-    "review_rate": 5,
-    "sentimiento": "positivo",
-    "BETO": "negativo",
-    "conf_BETO": 0.8288476467132568,
-    "causa": "etiqueta ruidosa / ironía"
-   },
-   {
-    "texto": "Buen material, buena calidad, sin embargo no se adhiere muy bien al piso y eso lo torna incomodo para trabajar!.",
+    "texto": "Buen producto solo que este modelo que pedi (h16) no tenia conector para el arnes del carro original , se tuvo que hacer una adaptacion , pero fuera de ahi todo funcional.",
     "review_rate": 4,
     "sentimiento": "positivo",
     "BETO": "neutro",
-    "conf_BETO": 0.94085294008255,
-    "causa": "frontera con neutro (3★ ambiguo)"
+    "conf_BETO": 0.5973721742630005,
+    "causa": "contraste"
    },
    {
-    "texto": "El producto detecta las emisoras, pero al momento de instalarlo en el auto no cabe en un astra enjoy 2009, así que tuve que adaptarlo cortando algunos plásticos de la base de la antena de aleta de tiburón.",
+    "texto": "Linda. No es muy gruesa y esta cocida masomenos. Pero por el precio mas no se puede pedir.",
     "review_rate": 2,
     "sentimiento": "negativo",
     "BETO": "neutro",
-    "conf_BETO": 0.8355369567871094,
+    "conf_BETO": 0.7784737944602966,
+    "causa": "contraste"
+   },
+   {
+    "texto": "Son de buena calidad para ejercicios básicos y caseros. Las recomiendo si vas a utilizar bandas por primera vez. Si hacés ejercicio con frecuencia buscaría invertir en algo de mayor calidad. La amarilla y la roja son de resistencia muy baja y algo finitas, por lo que tienden a enrollarse. La azul es la mejor de las tres.",
+    "review_rate": 3,
+    "sentimiento": "neutro",
+    "BETO": "positivo",
+    "conf_BETO": 0.9447442293167114,
     "causa": "frontera con neutro (3★ ambiguo)"
    },
    {
-    "texto": "No era exactamente igual a la foto (otro diseño) y la calidad no es tan excelente, las rueditas se mueven mucho para los lados y el volante se baja sin hacerle nada.",
+    "texto": "Por el precio estodo loque dise aun que tiene que estar muy oscuro el cuarto. Obviamente siquires con luz tienes que comprar otro con más resolución si te lo recomiendo.",
     "review_rate": 4,
     "sentimiento": "positivo",
     "BETO": "neutro",
-    "conf_BETO": 0.6913483738899231,
+    "conf_BETO": 0.7104071974754333,
     "causa": "frontera con neutro (3★ ambiguo)"
    },
    {
-    "texto": "Son de buena calidad pero no se pudieron usar la mascarilla de los ojos mantiene empañda.",
+    "texto": "Buen diseño atractivo buen audio, el microfono es insuficiente para video conferencias el volumen es bajo.",
     "review_rate": 2,
     "sentimiento": "negativo",
     "BETO": "neutro",
-    "conf_BETO": 0.8107882142066956,
+    "conf_BETO": 0.8607479929924011,
+    "causa": "frontera con neutro (3★ ambiguo)"
+   },
+   {
+    "texto": "Quedan pequeños para alguien talla 38, dudo que a alguien 39 o 40 le queden los que dicen de 38-41, de resto son muy buenos????.",
+    "review_rate": 4,
+    "sentimiento": "positivo",
+    "BETO": "neutro",
+    "conf_BETO": 0.7835015058517456,
     "causa": "frontera con neutro (3★ ambiguo)"
    },
    {
@@ -3759,7 +3865,7 @@
     "review_rate": 2,
     "sentimiento": "negativo",
     "BETO": "positivo",
-    "conf_BETO": 0.5491477847099304,
+    "conf_BETO": 0.518879771232605,
     "causa": "menciona estrellas"
    },
    {
@@ -3767,7 +3873,7 @@
     "review_rate": 4,
     "sentimiento": "positivo",
     "BETO": "neutro",
-    "conf_BETO": 0.4858022630214691,
+    "conf_BETO": 0.4465441107749939,
     "causa": "menciona estrellas"
    },
    {
@@ -3775,7 +3881,7 @@
     "review_rate": 2,
     "sentimiento": "negativo",
     "BETO": "neutro",
-    "conf_BETO": 0.7239559292793274,
+    "conf_BETO": 0.649242639541626,
     "causa": "menciona estrellas"
    },
    {
@@ -3783,40 +3889,72 @@
     "review_rate": 5,
     "sentimiento": "positivo",
     "BETO": "neutro",
-    "conf_BETO": 0.486205130815506,
+    "conf_BETO": 0.4680662155151367,
     "causa": "menciona estrellas"
    },
    {
-    "texto": "La compré porque decía (es muy buena opción las los celíacos, siempre asegurándonos que no contenga trazas de gluten) y tiene trigo. No es sin tacc.",
-    "review_rate": 2,
-    "sentimiento": "negativo",
-    "BETO": "positivo",
-    "conf_BETO": 0.829248309135437,
+    "texto": "El avvolgente lungo me pareció ácido. No me resultó una buena alternativa de las capsulas nespresso.",
+    "review_rate": 3,
+    "sentimiento": "neutro",
+    "BETO": "negativo",
+    "conf_BETO": 0.8721981048583984,
     "causa": "negación"
    },
    {
-    "texto": "El taladro excelente, robusto y potente, no así las piezas que lo acompañan, pésima calidad, se me rompieron varias con el primer uso.",
+    "texto": "Me solucionò el problema que tenia, porque el asiento donde apoya la sopapa estaba dañado con los años, y ninguna otra sopapa lo dejaba bien tapado, siempre goteaba el inodoro, quedaba perdiendo un poco. Soluciòn definitiva con este accesorio, ya hace bastantes dias que lo coloquè y no perdiò nunca mas.",
+    "review_rate": 5,
+    "sentimiento": "positivo",
+    "BETO": "negativo",
+    "conf_BETO": 0.5530140995979309,
+    "causa": "negación"
+   },
+   {
+    "texto": "Muy linda y tal cual la foto. El tema que no funcionó a sus fines. El perro pensó que era un juguete y la masticó toda. La rompió enseguida.",
+    "review_rate": 3,
+    "sentimiento": "neutro",
+    "BETO": "negativo",
+    "conf_BETO": 0.7046170234680176,
+    "causa": "negación"
+   },
+   {
+    "texto": "Es pequeña, práctica, fácil de usar, ideal para viajes. Lo único que no me gustó es que al tener poca temperatura máxima no termina de tener un acabo final muy lacio, inclusive en cabellos finos.",
+    "review_rate": 3,
+    "sentimiento": "neutro",
+    "BETO": "positivo",
+    "conf_BETO": 0.8717529773712158,
+    "causa": "negación"
+   },
+   {
+    "texto": "Parecia muy util. Me resulta muy dificil usarlo, crei que al introducirlo y sacarlo iba a ser mas facil sacar el centro del cupcake y al retirar el sacabocado sale sin el contenido (masa).",
+    "review_rate": 1,
+    "sentimiento": "negativo",
+    "BETO": "positivo",
+    "conf_BETO": 0.639655351638794,
+    "causa": "otro / etiqueta ruidosa"
+   },
+   {
+    "texto": "Éste producto es perfecto para celulares y tabletas para su uso en llamada o investigación de algo y sostener tu table para ver alguna película te lo recomiendo diavetico2.",
+    "review_rate": 2,
+    "sentimiento": "negativo",
+    "BETO": "positivo",
+    "conf_BETO": 0.9304144382476807,
+    "causa": "otro / etiqueta ruidosa"
+   },
+   {
+    "texto": "Insuperable para el precio. Podria valer el doble y me conformaría el precio. Si buscas algo mejor podes pagar mil dólares un oculus rift.",
     "review_rate": 4,
     "sentimiento": "positivo",
     "BETO": "negativo",
-    "conf_BETO": 0.8351839780807495,
-    "causa": "negación"
+    "conf_BETO": 0.8931564688682556,
+    "causa": "otro / etiqueta ruidosa"
    },
    {
-    "texto": "Cumple su función, no endurece jamas no importa que tipo de curado le des, sella perfectamente, es necesario poner alguna capa de material que si cure.",
-    "review_rate": 2,
+    "texto": "La calidad del producto muy muy buena!! solo que deberían poner fotos donde se identifique bien el color del producto. En publicación parase de un color y a la realidad es otro!!!!.",
+    "review_rate": 1,
     "sentimiento": "negativo",
     "BETO": "positivo",
-    "conf_BETO": 0.9236868619918823,
-    "causa": "negación"
-   },
-   {
-    "texto": "Nos es muy fácil de manejar, el cd esta en inglés y chino, complejo para los que no manejamos el idioma y se debe bajar un programa para el celular que tiene un cobro mensual.",
-    "review_rate": 2,
-    "sentimiento": "negativo",
-    "BETO": "positivo",
-    "conf_BETO": 0.7972908020019531,
-    "causa": "negación"
+    "conf_BETO": 0.8705641627311707,
+    "causa": "otro / etiqueta ruidosa"
    }
   ],
   "criterio": [
@@ -3849,6 +3987,13 @@
     "cumple": false
    },
    {
+    "modelo": "BETO",
+    "criterio": "Capacidad en lote",
+    "umbral": "1 hora de volumen en < 10 min",
+    "valor": 2.6502407335068825,
+    "cumple": true
+   },
+   {
     "modelo": "BETO int8",
     "criterio": "Ganancia de calidad",
     "umbral": "F1 macro ≥ GRU + 0,02",
@@ -3874,6 +4019,13 @@
     "criterio": "Latencia en línea (CPU)",
     "umbral": "p95 ≤ 150 ms",
     "valor": 121.27110999936119,
+    "cumple": true
+   },
+   {
+    "modelo": "BETO int8",
+    "criterio": "Capacidad en lote",
+    "umbral": "1 hora de volumen en < 10 min",
+    "valor": 1.7775746889467596,
     "cumple": true
    },
    {
@@ -3903,6 +4055,13 @@
     "umbral": "p95 ≤ 150 ms",
     "valor": 6.483444999503263,
     "cumple": true
+   },
+   {
+    "modelo": "GRU",
+    "criterio": "Capacidad en lote",
+    "umbral": "1 hora de volumen en < 10 min",
+    "valor": 0.0303053530093625,
+    "cumple": true
    }
   ],
   "cumple_bert": false,
@@ -3912,9 +4071,521 @@
    "BETO int8": false,
    "GRU": false
   },
-  "modelo_demo": "GRU",
+  "modelo_demo": "BETO",
   "umbral_demo": 0.6800000000000004,
-  "T_demo": 1.0539918425841548
+  "T_demo": 1.0539918425841548,
+  "resumen_robustez": [
+   {
+    "modelo": "TF-IDF + Regresión Logística",
+    "grupo": "cortos (≤ 15 palabras)",
+    "casos": 12,
+    "acierta": 7,
+    "se abstiene": 3,
+    "falla": 2
+   },
+   {
+    "modelo": "TF-IDF + Regresión Logística",
+    "grupo": "largos (> 15 palabras)",
+    "casos": 7,
+    "acierta": 4,
+    "se abstiene": 2,
+    "falla": 1
+   },
+   {
+    "modelo": "GRU",
+    "grupo": "cortos (≤ 15 palabras)",
+    "casos": 12,
+    "acierta": 6,
+    "se abstiene": 2,
+    "falla": 4
+   },
+   {
+    "modelo": "GRU",
+    "grupo": "largos (> 15 palabras)",
+    "casos": 7,
+    "acierta": 2,
+    "se abstiene": 3,
+    "falla": 2
+   },
+   {
+    "modelo": "BETO",
+    "grupo": "cortos (≤ 15 palabras)",
+    "casos": 12,
+    "acierta": 7,
+    "se abstiene": 1,
+    "falla": 4
+   },
+   {
+    "modelo": "BETO",
+    "grupo": "largos (> 15 palabras)",
+    "casos": 7,
+    "acierta": 3,
+    "se abstiene": 3,
+    "falla": 1
+   }
+  ],
+  "ood": {
+   "tabla": [
+    {
+     "método": "similitud BETO (k=5)",
+     "umbral (p2 de validación)": 0.857400119304657,
+     "reseñas de prueba marcadas": 0.027,
+     "textos fuera de dominio detectados": 1.0
+    },
+    {
+     "método": "cobertura de vocabulario",
+     "umbral (p2 de validación)": 0.9090909090909091,
+     "reseñas de prueba marcadas": 0.019,
+     "textos fuera de dominio detectados": 0.45
+    }
+   ],
+   "umbral_emb": 0.857400119304657,
+   "umbral_cobertura": 0.9090909090909091,
+   "textos": [
+    {
+     "texto": "La fotosíntesis depende de la energía solar",
+     "similitud": 0.8126557469367981,
+     "detectado": true
+    },
+    {
+     "texto": "asdf qwerty 12345",
+     "similitud": 0.8190382719039917,
+     "detectado": true
+    },
+    {
+     "texto": "El partido terminó dos a uno y el delantero fue expulsado en el segundo tiempo",
+     "similitud": 0.8448015451431274,
+     "detectado": true
+    },
+    {
+     "texto": "Mañana va a llover en Bogotá según el pronóstico del clima",
+     "similitud": 0.8464238047599792,
+     "detectado": true
+    },
+    {
+     "texto": "Para preparar arepas se necesita harina de maíz, agua y sal",
+     "similitud": 0.8279924392700195,
+     "detectado": true
+    },
+    {
+     "texto": "def suma(a, b): return a + b",
+     "similitud": 0.7985767722129822,
+     "detectado": true
+    },
+    {
+     "texto": "The quick brown fox jumps over the lazy dog",
+     "similitud": 0.8285528421401978,
+     "detectado": true
+    },
+    {
+     "texto": "La reunión de la junta directiva se aplazó para el próximo martes",
+     "similitud": 0.8145931363105774,
+     "detectado": true
+    },
+    {
+     "texto": "El presidente anunció una reforma tributaria en el congreso",
+     "similitud": 0.8490806818008423,
+     "detectado": true
+    },
+    {
+     "texto": "Los planetas giran alrededor del sol en órbitas elípticas",
+     "similitud": 0.733172595500946,
+     "detectado": true
+    },
+    {
+     "texto": "Mi gato duerme todo el día en el sofá de la sala",
+     "similitud": 0.7945228815078735,
+     "detectado": true
+    },
+    {
+     "texto": "Hoy aprendí a resolver ecuaciones de segundo grado en clase de matemáticas",
+     "similitud": 0.7795243263244629,
+     "detectado": true
+    },
+    {
+     "texto": "Bonjour, je voudrais un café s'il vous plaît",
+     "similitud": 0.6970823407173157,
+     "detectado": true
+    },
+    {
+     "texto": "La revolución francesa comenzó en 1789 con la toma de la Bastilla",
+     "similitud": 0.7843736410140991,
+     "detectado": true
+    },
+    {
+     "texto": "Necesito el certificado laboral para el trámite del banco",
+     "similitud": 0.8145588636398315,
+     "detectado": true
+    },
+    {
+     "texto": "Hola, ¿a qué hora abre la oficina el sábado?",
+     "similitud": 0.838106632232666,
+     "detectado": true
+    },
+    {
+     "texto": "La teoría de la relatividad cambió la física moderna",
+     "similitud": 0.7587963938713074,
+     "detectado": true
+    },
+    {
+     "texto": "Receta: hornear el pastel a 180 grados durante 40 minutos",
+     "similitud": 0.7762938737869263,
+     "detectado": true
+    },
+    {
+     "texto": "El equipo de fútbol ganó el campeonato nacional después de diez años",
+     "similitud": 0.8130241632461548,
+     "detectado": true
+    },
+    {
+     "texto": "Las elecciones regionales serán en octubre del próximo año",
+     "similitud": 0.7764859199523926,
+     "detectado": true
+    }
+   ]
+  },
+  "errores_abstencion": 0.5216907675194661,
+  "revision_manual": [
+   {
+    "texto": "Me hizo sangrar la piel, me cortó. Afeita muy bien, pero los peines que traen son demasiad…",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.49,
+    "palabras": 48,
+    "causa (revisión manual)": "opinión mixta",
+    "comentario": "La queja (me cortó, me hizo sangrar) pesa más en el texto que el elogio; con 4★ la etiqueta es discutible."
+   },
+   {
+    "texto": "Muy bueno pero las cartas algunas son muy malas.",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.98,
+    "palabras": 9,
+    "causa (revisión manual)": "texto corto + contraste",
+    "comentario": "Nueve palabras y un 'pero': el sesgo de longitud lo empuja a negativo."
+   },
+   {
+    "texto": "Lo compré para mi perrita fox terrier adulta y le gustó. Al poco tiempo murió y se la dimo…",
+    "★": 5,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.6,
+    "palabras": 45,
+    "causa (revisión manual)": "palabras negativas ajenas al producto",
+    "comentario": "La mascota murió: el modelo toma esa palabra como queja aunque el producto se elogia."
+   },
+   {
+    "texto": "Hace 1 año q vengo luchando contra las cucas! probé de todo hasta un spray q lo pones y x …",
+    "★": 5,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.49,
+    "palabras": 91,
+    "causa (revisión manual)": "relato del problema previo",
+    "comentario": "Cuenta todo lo que no funcionó antes de este producto; la parte negativa ocupa más texto."
+   },
+   {
+    "texto": "Buena relacion precio-calidad graba como celular de los del 2008 mas o menos.",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.55,
+    "palabras": 13,
+    "causa (revisión manual)": "texto corto + comparación ambigua",
+    "comentario": "Comparar con 'celulares del 2008' puede leerse como crítica; además es corto."
+   },
+   {
+    "texto": "Antes sabia mas a chilitos. En general aun asi es un gran producto.",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.59,
+    "palabras": 13,
+    "causa (revisión manual)": "texto corto + contraste",
+    "comentario": "Empieza con una queja y termina elogiando; corto."
+   },
+   {
+    "texto": "Muy lindo novedoso, la niña se divierte mucho.",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.95,
+    "palabras": 8,
+    "causa (revisión manual)": "sesgo de longitud",
+    "comentario": "Elogio claro de 8 palabras leído como negativo con 0,98: el caso típico del atajo corto ⇒ negativo."
+   },
+   {
+    "texto": "Perfecto, en buen estado, ideal para apuntes.",
+    "★": 5,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.74,
+    "palabras": 7,
+    "causa (revisión manual)": "sesgo de longitud",
+    "comentario": "Elogio de 7 palabras leído como negativo."
+   },
+   {
+    "texto": "Buen material, buena calidad, sin embargo no se adhiere muy bien al piso y eso lo torna in…",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "neutro",
+    "conf.": 0.87,
+    "palabras": 20,
+    "causa (revisión manual)": "etiqueta discutible",
+    "comentario": "Describe un defecto que impide usarlo bien; neutro es una lectura razonable aunque tenga 4★."
+   },
+   {
+    "texto": "El producto detecta las emisoras, pero al momento de instalarlo en el auto no cabe en un a…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "neutro",
+    "conf.": 0.74,
+    "palabras": 38,
+    "causa (revisión manual)": "queja sin emoción",
+    "comentario": "Problema de compatibilidad contado en tono neutro; el modelo no ve palabras de enojo."
+   },
+   {
+    "texto": "No era exactamente igual a la foto (otro diseño) y la calidad no es tan excelente, las rue…",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "neutro",
+    "conf.": 0.63,
+    "palabras": 32,
+    "causa (revisión manual)": "etiqueta ruidosa",
+    "comentario": "Tres quejas seguidas y 4★: la estrella no refleja el texto."
+   },
+   {
+    "texto": "Son de buena calidad pero no se pudieron usar la mascarilla de los ojos mantiene empañda.",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "neutro",
+    "conf.": 0.73,
+    "palabras": 16,
+    "causa (revisión manual)": "opinión mixta",
+    "comentario": "Elogio y defecto que impide el uso; neutro es defendible."
+   },
+   {
+    "texto": "Son muy prácticas y realmente cumplirían su objetivo si fueran de mejor calidad. Le doy do…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "positivo",
+    "conf.": 0.52,
+    "palabras": 33,
+    "causa (revisión manual)": "condicional no captado",
+    "comentario": "'Cumplirían si fueran de mejor calidad' es una crítica en condicional; el modelo ve los elogios."
+   },
+   {
+    "texto": "Lo compré para donarlo. Lo regalé a una familia de madre viuda (hace un año), 7 hijos y un…",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "neutro",
+    "conf.": 0.45,
+    "palabras": 149,
+    "causa (revisión manual)": "no evalúa el producto",
+    "comentario": "El autor dice que no lo ha usado y que pone estrellas 'para enviar el mensaje': no es una reseña."
+   },
+   {
+    "texto": "Es corte recto, nada que ver el corte con el de las fotos, la tela es buena calidad por es…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "neutro",
+    "conf.": 0.65,
+    "palabras": 34,
+    "causa (revisión manual)": "menciona estrellas",
+    "comentario": "Explica por qué pone dos estrellas y no una; mezcla de queja y concesión."
+   },
+   {
+    "texto": "Muy suaves, lo único es que empiezan a endurecerse después de unos días, lo solucioné raya…",
+    "★": 5,
+    "real": "positivo",
+    "BETO": "neutro",
+    "conf.": 0.47,
+    "palabras": 110,
+    "causa (revisión manual)": "opinión mixta (se abstendría)",
+    "comentario": "Muchos puntos en contra y cierre con 5★; confianza baja, la abstención lo manda a revisión."
+   },
+   {
+    "texto": "La compré porque decía (es muy buena opción las los celíacos, siempre asegurándonos que no…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "positivo",
+    "conf.": 0.75,
+    "palabras": 26,
+    "causa (revisión manual)": "conocimiento de dominio",
+    "comentario": "'No es sin TACC' (no es apto para celíacos) es la queja principal y el modelo no conoce la sigla."
+   },
+   {
+    "texto": "El taladro excelente, robusto y potente, no así las piezas que lo acompañan, pésima calida…",
+    "★": 4,
+    "real": "positivo",
+    "BETO": "negativo",
+    "conf.": 0.76,
+    "palabras": 23,
+    "causa (revisión manual)": "opinión mixta",
+    "comentario": "Elogia el taladro y critica duro los accesorios; la etiqueta 4★ es discutible."
+   },
+   {
+    "texto": "Cumple su función, no endurece jamas no importa que tipo de curado le des, sella perfectam…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "positivo",
+    "conf.": 0.86,
+    "palabras": 26,
+    "causa (revisión manual)": "negación de dominio",
+    "comentario": "'No endurece jamás' es el defecto principal de un sellador; el modelo lo lee como algo bueno."
+   },
+   {
+    "texto": "Nos es muy fácil de manejar, el cd esta en inglés y chino, complejo para los que no maneja…",
+    "★": 2,
+    "real": "negativo",
+    "BETO": "positivo",
+    "conf.": 0.72,
+    "palabras": 35,
+    "causa (revisión manual)": "error ortográfico que invierte el sentido",
+    "comentario": "'Nos es' en vez de 'No es': el error convierte una queja en un elogio."
+   }
+  ],
+  "agregado": {
+   "pais": [
+    {
+     "country": "MLA",
+     "comentarios": 2190,
+     "% negativo real": 0.3972602739726027,
+     "% negativo BETO": 0.3639269406392694,
+     "% positivo real": 0.40821917808219177,
+     "% positivo BETO": 0.40593607305936075,
+     "error % negativo (pp)": -3.3333333333333326
+    },
+    {
+     "country": "MLM",
+     "comentarios": 1502,
+     "% negativo real": 0.3988015978695073,
+     "% negativo BETO": 0.3608521970705726,
+     "% positivo real": 0.4021304926764314,
+     "% positivo BETO": 0.36950732356857524,
+     "error % negativo (pp)": -3.794940079893472
+    },
+    {
+     "country": "MCO",
+     "comentarios": 468,
+     "% negativo real": 0.3974358974358974,
+     "% negativo BETO": 0.3888888888888889,
+     "% positivo real": 0.3952991452991453,
+     "% positivo BETO": 0.3482905982905983,
+     "error % negativo (pp)": -0.8547008547008517
+    },
+    {
+     "country": "MLC",
+     "comentarios": 466,
+     "% negativo real": 0.40772532188841204,
+     "% negativo BETO": 0.40772532188841204,
+     "% positivo real": 0.3905579399141631,
+     "% positivo BETO": 0.28969957081545067,
+     "error % negativo (pp)": 0.0
+    },
+    {
+     "country": "MLU",
+     "comentarios": 272,
+     "% negativo real": 0.40808823529411764,
+     "% negativo BETO": 0.48161764705882354,
+     "% positivo real": 0.3602941176470588,
+     "% positivo BETO": 0.29411764705882354,
+     "error % negativo (pp)": 7.35294117647059
+    },
+    {
+     "country": "MLV",
+     "comentarios": 62,
+     "% negativo real": 0.3709677419354839,
+     "% negativo BETO": 0.3548387096774194,
+     "% positivo real": 0.4032258064516129,
+     "% positivo BETO": 0.2903225806451613,
+     "error % negativo (pp)": -1.6129032258064502
+    },
+    {
+     "country": "MPE",
+     "comentarios": 40,
+     "% negativo real": 0.45,
+     "% negativo BETO": 0.5,
+     "% positivo real": 0.35,
+     "% positivo BETO": 0.325,
+     "error % negativo (pp)": 4.999999999999999
+    }
+   ],
+   "categoria": [
+    {
+     "category": "Hogar / Casa",
+     "comentarios": 1685,
+     "% negativo real": 0.4029673590504451,
+     "% negativo BETO": 0.3839762611275964,
+     "% positivo real": 0.40059347181008903,
+     "% positivo BETO": 0.3632047477744807,
+     "error % negativo (pp)": -1.8991097922848699
+    },
+    {
+     "category": "Tecnología y electrónica / Tecnologia e electronica",
+     "comentarios": 1495,
+     "% negativo real": 0.4100334448160535,
+     "% negativo BETO": 0.36989966555183945,
+     "% positivo real": 0.39531772575250834,
+     "% positivo BETO": 0.3779264214046823,
+     "error % negativo (pp)": -4.013377926421407
+    },
+    {
+     "category": "Salud, ropa y cuidado personal / Saúde, roupas e cuidado pessoal",
+     "comentarios": 1461,
+     "% negativo real": 0.38535249828884327,
+     "% negativo BETO": 0.3661875427789186,
+     "% positivo real": 0.41204654346338127,
+     "% positivo BETO": 0.37166324435318276,
+     "error % negativo (pp)": -1.9164955509924697
+    },
+    {
+     "category": "Arte y entretenimiento / Arte e Entretenimiento",
+     "comentarios": 295,
+     "% negativo real": 0.39661016949152544,
+     "% negativo BETO": 0.4135593220338983,
+     "% positivo real": 0.4067796610169492,
+     "% positivo BETO": 0.3864406779661017,
+     "error % negativo (pp)": 1.6949152542372836
+    },
+    {
+     "category": "Alimentos y Bebidas / Alimentos e Bebidas",
+     "comentarios": 64,
+     "% negativo real": 0.390625,
+     "% negativo BETO": 0.421875,
+     "% positivo real": 0.21875,
+     "% positivo BETO": 0.296875,
+     "error % negativo (pp)": 3.125
+    }
+   ]
+  },
+  "pasa_lote": {
+   "BETO": true,
+   "BETO int8": false,
+   "GRU": false
+  },
+  "variabilidad": [
+   {
+    "modelo": "RNN",
+    "f1_por_semilla": "0.7482, 0.7356, 0.7512",
+    "media": 0.745,
+    "desv. est.": 0.0083
+   },
+   {
+    "modelo": "LSTM",
+    "f1_por_semilla": "0.7648, 0.7632, 0.7592",
+    "media": 0.7624,
+    "desv. est.": 0.0029
+   },
+   {
+    "modelo": "GRU",
+    "f1_por_semilla": "0.7643, 0.7677, 0.7700",
+    "media": 0.7673,
+    "desv. est.": 0.0028
+   }
+  ]
  },
  "minutos_totales": 173.10608567794165
 }

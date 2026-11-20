@@ -15,6 +15,7 @@ from pptx.util import Inches, Pt
 
 sys.path.insert(0, os.path.dirname(__file__))
 from resumen import cargar, cifras, corto, entero, n, pct  # noqa: E402
+from informe_texto import EQUIPO, POR_ROL, ML as R_ML, DS as R_DS, GIA as R_GIA, caso_valor  # noqa: E402
 
 RAIZ = sys.argv[1] if len(sys.argv) > 1 else "."
 r = cargar(RAIZ)
@@ -210,12 +211,12 @@ texto(s, 0.6, 1.2, 8.8, 1.4, "¿Qué siente el comprador? Sentimiento en reseña
 texto(s, 0.6, 2.75, 8.6, 0.8, "Línea base TF-IDF frente a RNN/LSTM/GRU (sesión 3) y un Transformer preentrenado, BETO (sesión 4), "
       "con abstención, calibración y gobierno", size=15, color="CADCFC")
 caja(s, 0.6, 3.85, 8.8, 0.02, TEAL, forma=MSO_SHAPE.RECTANGLE)
-texto(s, 0.6, 4.05, 8.8, 0.3, "Jose Romero", size=14, bold=True, color=WHITE)
-texto(s, 0.6, 3.55, 8.8, 0.3, "Especialista en Machine Learning · Magíster en Ciencia de Datos · Magíster en Gerencia en IA", size=12, color=TEAL)
+texto(s, 0.6, 4.0, 8.8, 0.3, "   ·   ".join(nom for nom, _ in EQUIPO), size=13, bold=True, color=WHITE)
+texto(s, 0.6, 3.55, 8.8, 0.3, "Machine Learning · Ciencia de Datos · Gerencia en IA", size=12, color=TEAL)
 texto(s, 0.6, 4.4, 8, 0.3, "Docente: Gerson José Moreno Morales · Noviembre de 2026", size=12, color="CADCFC")
 
 # ------------------------------------------------------------------ 2. Resumen ejecutivo
-s = nueva("Resumen ejecutivo · Magíster en Gerencia en IA", "La decisión en una diapositiva",
+s = nueva("Resumen ejecutivo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "La decisión en una diapositiva",
           f"Habla: Gerencia de IA\n\n\"Empezamos por la conclusión. Sobre la misma prueba de 5.000 comentarios, {corto(BERT)} obtiene "
           f"F1 macro {n(f['f1'][BERT])}, {('+' if f['delta_bert_s3'] >= 0 else '')}{n(f['delta_bert_s3'])} frente al mejor modelo "
           f"recurrente ({S3}) y {('+' if f['delta_bert_base'] >= 0 else '')}{n(f['delta_bert_base'])} frente a TF-IDF. "
@@ -230,7 +231,7 @@ texto(s, 0.75, 3.0, 8.5, 0.35, "Decisión del comité", size=14, bold=True, colo
 texto(s, 0.75, 3.4, 8.5, 1.6, decision, size=13)
 
 # ------------------------------------------------------------------ 3. Problema
-s = nueva("Problema · Magíster en Gerencia en IA", "Quién usa el sistema y qué decisión mejora",
+s = nueva("Problema · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Quién usa el sistema y qué decisión mejora",
           "Habla: Gerencia de IA\n\n\"El usuario es el analista de experiencia del comprador. La decisión: qué comentarios se atienden "
           "primero y a qué vendedor se le envía una alerta. Hoy se lee por muestreo y las estrellas solo existen en reseñas, no en chats ni "
           "reclamos. Construimos la etiqueta con las estrellas: 1 y 2 negativo, 3 neutro, 4 y 5 positivo. El error más caro es leer como "
@@ -251,7 +252,7 @@ for i, (est, cl, col, acc) in enumerate([("1★ 2★", "NEGATIVO · 40%", RED, "
     texto(s, x + 0.18, 4.55, 2.5, 0.35, acc, size=11)
 
 # ------------------------------------------------------------------ 4. Datos
-s = nueva("Datos · Magíster en Ciencia de Datos", "MeLiSA: 487 mil reseñas reales, auditadas antes de modelar",
+s = nueva("Datos · " + f"{POR_ROL[R_DS]} · Magíster en Ciencia de Datos", "MeLiSA: 487 mil reseñas reales, auditadas antes de modelar",
           f"Habla: Ciencia de Datos\n\n\"Usamos MeLiSA, una base pública de la Universidad de Buenos Aires: {entero(A['filas'])} reseñas "
           f"de 7 países y 5 categorías. Cada hallazgo terminó en una decisión: {A['duplicados_texto']} textos repetidos se dejan una sola "
           f"vez, {A['textos_contradictorios']} textos con sentimientos distintos se eliminan, y los pocos correos, teléfonos o URL se "
@@ -283,14 +284,15 @@ pl.data_labels.font.size = Pt(9)
 pii = A.get("pii", {})
 tabla(s, 5.3, 2.55, 4.2, [["Revisión", "Hallazgo"],
                           ["Nulos", "0"],
-                          ["PII (correo / URL / tel.)", f"{pii.get('EMAIL', 0)} / {pii.get('URL', 0)} / {pii.get('TEL', 0)} → enmascarada"],
+                          ["PII (correo / URL / tel.*)", f"{pii.get('EMAIL', 0)} / {pii.get('URL', 0)} / {pii.get('TEL', 0)} → enmascarada"],
                           ["Palabras P50 / P95 / P99", f"{n(A['palabras_p50'], 0)} / {n(A['palabras_p95'], 0)} / {n(A['palabras_p99'], 0)}"],
                           ["Subpalabras BETO P95", f"{n(A['tokens_bert']['p95'], 0)} → max_length {f['max_len']}"],
                           ["Neutro", "20% → pesos de clase"],
                           ["Filas finales", entero(A["filas_limpias"])]], [2.0, 2.2], size=10.5)
+texto(s, 5.3, 4.55, 4.2, 0.5, "*Muchos “teléfonos” son años o referencias de producto (p. ej. 2017-2018); igual se enmascaran.", size=9, color=MUTED)
 
 # ------------------------------------------------------------------ 5. Fuga y partición
-s = nueva("Datos · Magíster en Ciencia de Datos", "Sin fuga: el título regala la respuesta y queda por fuera",
+s = nueva("Datos · " + f"{POR_ROL[R_DS]} · Magíster en Ciencia de Datos", "Sin fuga: el título regala la respuesta y queda por fuera",
           f"Habla: Ciencia de Datos\n\n\"Un modelo que lee solo el título saca F1 {n(A['f1_solo_titulo'])}; leyendo el comentario saca "
           f"{n(A['f1_solo_comentario'])}. Que tres palabras le ganen al comentario completo demuestra que el título se escribe junto con "
           f"las estrellas: se excluye, igual que las estrellas. Partimos 70/15/15, estratificado y con semilla 42. Como BETO en CPU no puede "
@@ -326,7 +328,7 @@ texto(s, 5.2, 4.5, 4.3, 0.6, [[("Comparación justa: ", {"bold": True, "color": 
                               (f"validación y prueba comunes de {entero(A['n_comun'])} comentarios para los 8 modelos.", {})]], size=11)
 
 # ------------------------------------------------------------------ 6. Tres familias
-s = nueva("Modelado · Especialista en Machine Learning", "Tres familias de modelos sobre la misma partición",
+s = nueva("Modelado · " + f"{POR_ROL[R_ML]} · Especialista en Machine Learning", "Tres familias de modelos sobre la misma partición",
           f"Habla: Machine Learning\n\n\"La línea base convierte el texto en TF-IDF de palabras y bigramas y lo clasifica con regresión "
           f"logística o SVM. Las redes de la sesión 3 aprenden un embedding de 64 valores por palabra y lo leen en orden con RNN, LSTM o GRU. "
           f"BETO, de la sesión 4, ya llega preentrenado con millones de textos en español: divide en subpalabras y cada token mira a todos "
@@ -357,7 +359,7 @@ for i, (nom, sub, pasos, col) in enumerate(filas_fam):
             a.line.fill.background()
 
 # ------------------------------------------------------------------ 7. Atención y tokenizador
-s = nueva("Sesión 4 · Especialista en Machine Learning", "Atención: cada palabra mira a todas las demás a la vez",
+s = nueva("Sesión 4 · " + f"{POR_ROL[R_ML]} · Especialista en Machine Learning", "Atención: cada palabra mira a todas las demás a la vez",
           "Habla: Machine Learning\n\n\"La RNN tiene que cargar el inicio del comentario paso a paso. El Transformer calcula, para cada "
           "token, qué tan relevante es cada otro token: softmax de Q por K transpuesta sobre raíz de d, multiplicado por V. A la izquierda, "
           "la atención real de la última capa de nuestro BETO; a la derecha, la oclusión: cuánto cae la probabilidad si borramos cada "
@@ -384,7 +386,7 @@ texto(s, 6.65, 4.15, 2.85, 0.9, f"{n(A['tokens_bert']['subpalabras_por_palabra']
 
 # ------------------------------------------------------------------ 8. Fine-tuning
 hist = [h for h in s4["historia_bert"] if "eval_f1_macro" in h]
-s = nueva("Sesión 4 · Especialista en Machine Learning", "Fine-tuning de BETO con las reglas de la sesión 4",
+s = nueva("Sesión 4 · " + f"{POR_ROL[R_ML]} · Especialista en Machine Learning", "Fine-tuning de BETO con las reglas de la sesión 4",
           f"Habla: Machine Learning\n\n\"Ajustamos todo BETO, 110 millones de parámetros, con AdamW, learning rate 2e-5, warmup del 10%, "
           f"scheduler lineal y padding dinámico. Sin GPU, entrenamos con {entero(f['n_train_bert'])} comentarios estratificados, no con "
           f"340 mil: tardó {n(f['seg_bert'] / 60, 0)} minutos. Para que la comparación sea justa, entrenamos también una TF-IDF con exactamente "
@@ -403,7 +405,7 @@ for i, (v, et, col) in enumerate([(n(f["seg_bert"] / 60, 0) + " min", "de entren
 
 # ------------------------------------------------------------------ 9. Resultados
 orden = sorted(s4["comun"], key=lambda k: f["f1"][k])
-s = nueva("Resultados · Especialista en Machine Learning", "Comparación justa: los ocho modelos sobre la misma prueba",
+s = nueva("Resultados · " + f"{POR_ROL[R_ML]} · Especialista en Machine Learning", "Comparación justa: los ocho modelos sobre la misma prueba",
           f"Habla: Machine Learning\n\n\"Este es el resultado central: F1 macro sobre los mismos 5.000 comentarios de prueba. "
           f"{corto(BERT)} logra {n(f['f1'][BERT])}; el mejor recurrente, {S3}, {n(f['f1'][S3])}; la TF-IDF con todos los datos, "
           f"{n(f['f1'][BASE])}. Fíjense en la barra naranja: la TF-IDF con los mismos {entero(f['n_train_bert'])} comentarios que BETO "
@@ -435,7 +437,7 @@ texto(s, 6.1, 3.25, 3.4, 1.8, [[("Cómo leerlo. ", {"bold": True, "color": NAVY}
                                 "tres clases, así que el neutro cuenta tanto como las demás.", {})]], size=11)
 
 # ------------------------------------------------------------------ 10. Por clase + IC
-s = nueva("Resultados · Especialista en Machine Learning", "¿La ventaja es real? Clase por clase y con intervalo de confianza",
+s = nueva("Resultados · " + f"{POR_ROL[R_ML]} · Especialista en Machine Learning", "¿La ventaja es real? Clase por clase y con intervalo de confianza",
           "Habla: Machine Learning\n\n\"Todos los modelos son buenos en negativo y positivo; la diferencia se juega en el neutro. Y no basta "
           "con ver una diferencia: remuestreamos la prueba mil veces. Si el intervalo del 95% no cruza el cero, la diferencia no es suerte.\"")
 cd = CategoryChartData()
@@ -467,7 +469,7 @@ texto(s, 5.9, 3.15, 3.6, 1.9, "Bootstrap de 1.000 remuestreos de la prueba comú
 # ------------------------------------------------------------------ 11. Errores y segmentos
 tr = s4["segmentos"]["tramo"]
 causas = s4["errores_causas"]
-s = nueva("Errores · Magíster en Ciencia de Datos", "Dónde se equivocan los modelos",
+s = nueva("Errores · " + f"{POR_ROL[R_DS]} · Magíster en Ciencia de Datos", "Dónde se equivocan los modelos",
           f"Habla: Ciencia de Datos\n\n\"Revisamos los errores después de congelar el modelo. Por longitud, la red y BETO ganan sobre todo en "
           f"los comentarios largos, donde el orden importa. La mayoría de los errores de BETO están en la frontera con el neutro: comentarios "
           f"de 3 estrellas que suenan positivos o negativos. Parte del error es de la etiqueta, no del modelo, porque la etiqueta sale de las "
@@ -495,43 +497,47 @@ tot = sum(causas.values()) or 1
 filas_c = [["Causa probable (errores de BETO)", "%"]] + [[c, pct(v / tot, 0)] for c, v in list(causas.items())[:5]]
 tabla(s, 5.8, 1.35, 3.7, filas_c, [3.0, 0.7], size=10)
 neg = {k: s4["neg_como_pos"].get(k) for k in [BASE, S3, "BETO"]}
+texto(s, 5.8, 3.0, 3.7, 0.6, [[("Errores que la abstención manda a revisión: ", {"bold": True, "color": NAVY}),
+                              (pct(s4.get("errores_abstencion"), 0), {"bold": True})]], size=11)
 texto(s, 5.8, 3.55, 3.7, 1.5, [[("Error grave (negativo → positivo): ", {"bold": True, "color": RED})],
                               "  ·  ".join(f"{corto(k)} {v}" for k, v in neg.items())], size=11)
 
 # ------------------------------------------------------------------ 12. Robustez
 casos = s4["casos_robustez"]
 mods = [BASE, S3, "BETO"]
-s = nueva("Robustez · Magíster en Ciencia de Datos", "Contrafactuales: negación, contraste y lo que no sabe",
+s = nueva("Robustez · " + f"{POR_ROL[R_DS]} · Magíster en Ciencia de Datos", "Contrafactuales: negación, contraste y lo que no sabe",
           "Habla: Ciencia de Datos\n\n\"Probamos pares mínimos: la misma frase con y sin negación, con el contraste invertido, con errores de "
           "ortografía, mayúsculas, emojis e ironía, y textos que no tienen nada que ver con compras. Lo que buscamos en los textos fuera de "
           "dominio es que el modelo diga 'no sé' y mande el caso a una persona. Y encontramos un sesgo importante: en este corpus casi todos los comentarios cortos son negativos, así que los modelos aprendieron que corto es igual a negativo. Por eso los comentarios cortos no dispararán alertas automáticas.\"")
-sel = [c for c in casos if c["caso"] in ("negación", "contraste", "ortografía", "ironía", "fuera de dominio")][:7]
+orden_casos = ["negación", "negación (larga)", "contraste", "contraste (largo)", "fuera de dominio", "fuera de dominio (largo)"]
+sel = [x for o in orden_casos for x in casos if x["caso"] == o][:8]
 filas_rb = [["Caso", "Texto", "Esperado"] + [corto(k) for k in mods]]
 colores = {}
-for i, c in enumerate(sel, 1):
-    fila = [c["caso"], c["texto"][:44] + ("…" if len(c["texto"]) > 44 else ""), c["esperado"]]
+COLOR_EST = {"acierta": "D1FAE5", "se abstiene": "E0E7FF", "falla": "FEE2E2"}
+for i, x in enumerate(sel, 1):
+    fila = [x["caso"], x["texto"][:40] + ("…" if len(x["texto"]) > 40 else ""), x["esperado"]]
     for j, k in enumerate(mods):
-        v = c[k]
-        etiqueta = v.split(" ")[0]
-        abst_ = "revisión" in v
-        bien = (c["esperado"] == "abstención" and abst_) or (etiqueta == c["esperado"])
-        fila.append(("↷ " if abst_ else "") + etiqueta)
-        colores[(i, 3 + j)] = "D1FAE5" if bien else "FEE2E2"
+        v = x[k]
+        fila.append(("↷ " if "revisión" in v else "") + v.split(" ")[0])
+        colores[(i, 3 + j)] = COLOR_EST.get(x.get(f"estado_{k}"), "FFFFFF")
     filas_rb.append(fila)
-tabla(s, 0.5, 1.2, 9.0, filas_rb, [1.15, 3.35, 1.0, 1.15, 1.15, 1.2], size=9.5, alto_fila=0.31, colores_celda=colores)
-texto(s, 0.5, 3.8, 9, 0.3, f"Verde = correcto · rojo = error · ↷ = se abstiene. Casos superados de {len(casos)}: "
-      + " · ".join(f"{corto(k)} {s4['robustez'][k]}" for k in mods), size=9.5, color=MUTED)
+tabla(s, 0.5, 1.15, 9.0, filas_rb, [1.45, 3.05, 1.0, 1.15, 1.15, 1.2], size=9, alto_fila=0.29, colores_celda=colores)
+rr = {(x["modelo"], x["grupo"]): x for x in s4.get("resumen_robustez", [])}
+txt_rr = " · ".join(f"{corto(k)}: cortos {rr[(k, 'cortos (≤ 15 palabras)')]['acierta']}/{rr[(k, 'cortos (≤ 15 palabras)')]['casos']}, "
+                    f"largos {rr[(k, 'largos (> 15 palabras)')]['acierta']}/{rr[(k, 'largos (> 15 palabras)')]['casos']}"
+                    for k in mods if (k, "cortos (≤ 15 palabras)") in rr)
+texto(s, 0.5, 3.83, 9, 0.3, "Verde = acierta · azul = se abstiene · rojo = falla · ↷ = revisión humana. Aciertos " + txt_rr, size=9, color=MUTED)
 if SES:
     caja(s, 0.5, 4.15, 9.0, 0.95, "FEF3C7")
     rb, rg, rl = (ses_mod.get((k, "≤ 15 palabras"), {}).get("recall positivo", 0) for k in ["BETO", S3, BASE])
     texto(s, 0.7, 4.22, 8.6, 0.85, [[("Hallazgo: sesgo de longitud. ", {"bold": True, "color": "92400E"}),
                                     (f"En MeLiSA el {pct(SES['pct_negativo_le15'], 0)} de los comentarios de ≤ 15 palabras son negativos: "
                                      f"los modelos aprendieron “corto ⇒ negativo”. Recall de positivos cortos: BETO {pct(rb, 0)}, {S3} "
-                                     f"{pct(rg, 0)}, TF-IDF {pct(rl, 0)}. El mismo elogio con más contexto se clasifica bien.", {})]],
+                                     f"{pct(rg, 0)}, TF-IDF {pct(rl, 0)}. Con más contexto BETO deja de responder “negativo” a todo; los textos ajenos van a revisión.", {})]],
           size=11, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 13. Calibración y abstención
-s = nueva("Abstención · Magíster en Gerencia en IA", "Si el modelo no está seguro, decide una persona",
+s = nueva("Abstención · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Si el modelo no está seguro, decide una persona",
           f"Habla: Gerencia de IA\n\n\"Primero calibramos: con temperature scaling la confianza de 0,8 significa acertar cerca del 80%. "
           f"Luego, si la confianza es menor que el umbral, el comentario pasa a una persona. El umbral se eligió en validación para lograr "
           f"recall de negativo de 0,92 en lo que el modelo decide. Con {corto(REC)}, en la prueba común decide el "
@@ -578,11 +584,13 @@ texto(s, 5.9, 3.25, 3.6, 1.8, [[("Calibración de " + corto(BERT) + ": ", {"bold
 
 # ------------------------------------------------------------------ 14. Costo y latencia
 ef = {e["modelo"]: e for e in s4["eficiencia"]}
-s = nueva("Costo · Magíster en Gerencia en IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
+s = nueva("Costo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
           f"Habla: Gerencia de IA\n\n\"Medimos todo en el mismo portátil, sin GPU. TF-IDF responde en menos de un milisegundo; BETO, en "
           f"{n(f['p95'].get('BETO'), 0)} ms en el percentil 95, y la versión cuantizada a int8 en {n(f['p95'].get('BETO int8'), 0)} ms. "
           f"Con el supuesto de una máquina de 4 vCPU a 0,20 dólares la hora, procesar un millón de comentarios cuesta centavos con TF-IDF y "
           f"unos pocos dólares con BETO: el costo de cómputo es bajo frente al valor de no perder un cliente molesto.\"")
+_a, _m = caso_valor(ab_rec.get("cobertura") or 0, ab_rec.get("recall_neg_efectivo") or 0, ef[REC]["USD por millón"])
+_neto_inc = _m["neto"] - _a["neto"]
 mods_ef = [k for k in [BASE, S3, "BETO", "BETO int8"] if k in ef]
 filas_e = [["Modelo", "F1 prueba", "p50 ms", "p95 ms", "Coment./s", "Parámetros", "US$ / millón"]]
 for k in mods_ef:
@@ -594,13 +602,13 @@ tabla(s, 0.5, 1.3, 9.0, filas_e, [2.3, 1.0, 1.0, 1.0, 1.2, 1.25, 1.25], size=11,
 for i, (v, et, col) in enumerate([
         (n(f["p95"].get("BETO", 0) / max(f["p95"][BASE], 1e-6), 0) + "×", "más lento BETO que TF-IDF (p95, un comentario)", ORANGE),
         (n(f["p95"].get("BETO int8", 0), 0) + " ms", "p95 de BETO int8 (límite de la sesión 4: 150 ms)", NAVY),
-        (n(f["seg"].get("BETO", 0) / 60, 0) + " min", "de entrenamiento de BETO en CPU", MUTED)]):
+        ("US$" + entero(_neto_inc / 1000) + " mil", "beneficio neto incremental al mes (supuestos ilustrativos, ver informe §7)", GREEN)]):
     dato(s, 0.5 + i * 3.05, 3.55, 2.8, v, et, col, size=28)
 
 # ------------------------------------------------------------------ 15. Criterio de adopción
 crit = s4["criterio"]
 mods_c = list(dict.fromkeys(c["modelo"] for c in crit))
-s = nueva("Decisión · Magíster en Gerencia en IA", "Criterio de adopción de la sesión 4",
+s = nueva("Decisión · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Criterio de adopción de la sesión 4",
           f"Habla: Gerencia de IA\n\n\"El criterio de la sesión 4 exige cuatro cosas a la vez: mejorar el F1 al menos 0,02 frente al campeón "
           f"anterior, recall de negativo de 0,92 con abstención, cobertura automática de al menos 75% y latencia p95 de 150 ms o menos. "
           f"{(D['criterio_estricto'] + ' ' + D['por_que']) if D else ''}\"")
@@ -624,29 +632,31 @@ for i, cr in enumerate(criterios, 1):
             txt = pct(v)
         elif "Ganancia" in cr:
             txt = ("+" if v >= 0 else "") + n(v)
+        elif "lote" in cr:
+            txt = n(v, 2 if v < 1 else 1) + " min"
         else:
             txt = n(v)
         fila.append(f"{ok if c['cumple'] else no}  {txt}")
         colores[(i, 2 + j)] = "D1FAE5" if c["cumple"] else "FEE2E2"
     filas_k.append(fila)
 filas_k[1][1] = f"F1 ≥ campeón anterior + 0,02"
-tabla(s, 0.5, 1.3, 9.0, filas_k, [2.4, 2.1] + [4.5 / len(mods_c)] * len(mods_c), size=10.5, alto_fila=0.45, colores_celda=colores)
-texto(s, 0.5, 3.75, 9.0, 0.3, "Referencia: BETO y BETO int8 se comparan con " + S3 + "; " + S3 + " se compara con " + corto(BASE) + ".",
+tabla(s, 0.5, 1.3, 9.0, filas_k, [2.4, 2.1] + [4.5 / len(mods_c)] * len(mods_c), size=10.5, alto_fila=0.38, colores_celda=colores)
+texto(s, 0.5, 3.7, 9.0, 0.3, "Capacidad en lote: criterio operativo fijado en la formulación (proceso por lotes horarios). Referencia: BETO y BETO int8 se comparan con " + S3 + "; " + S3 + " se compara con " + corto(BASE) + ".",
       size=10, color=MUTED)
 caja(s, 0.5, 4.1, 9.0, 0.95, "E0F2F4")
 texto(s, 0.7, 4.15, 8.6, 0.85, ((D["criterio_estricto"] + " ") if D else "") + decision_corta, size=11.5, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 16. Riesgos
-s = nueva("Gobierno · Magíster en Gerencia en IA", "Riesgos, controles y condiciones de suspensión",
+s = nueva("Gobierno · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Riesgos, controles y condiciones de suspensión",
           "Habla: Gerencia de IA\n\n\"Cada riesgo tiene un control y un responsable; la matriz completa está en el Excel. Lo más importante: "
           "el modelo solo prioriza y alerta, nunca sanciona; la PII se enmascara antes de inferir; reportamos F1 por país; y tenemos "
           "condiciones explícitas para suspender o volver al modelo simple.\"")
-riesgos = [("Etiqueta ruidosa", "Reetiquetar 300 neutros al mes", "Ciencia de Datos", RED),
-           ("Negativo leído como positivo", "Abstención con recall ≥ 0,92", "Machine Learning", RED),
-           ("Sesgo por país", "F1 por país; mínimo antes de activar", "Ciencia de Datos", ORANGE),
-           ("Drift del lenguaje", "Monitorear abstención, OOV y confianza", "Machine Learning", ORANGE),
-           ("PII en el texto", "Enmascarar antes de inferir y registrar", "Gerencia de IA", ORANGE),
-           ("Uso para sancionar", "Solo prioriza; un agente confirma", "Gerencia de IA", GREEN)]
+riesgos = [("Texto fuera de dominio", "Control por similitud con reseñas (BETO)", POR_ROL[R_ML], RED),
+           ("Negativo leído como positivo", "Abstención con recall ≥ 0,92", POR_ROL[R_ML], RED),
+           ("Sesgo de longitud y país", "Sin alertas en cortos; F1 por país", POR_ROL[R_DS], ORANGE),
+           ("Drift y etiqueta ruidosa", "Monitoreo semanal; reetiquetar 300/mes", POR_ROL[R_DS], ORANGE),
+           ("PII en el texto", "Enmascarar antes de inferir y registrar", POR_ROL[R_GIA], ORANGE),
+           ("Uso para sancionar", "Solo prioriza; un agente confirma", POR_ROL[R_GIA], GREEN)]
 for i, (rsg, ctl, resp, col) in enumerate(riesgos):
     x, y = 0.5 + (i % 2) * 2.85, 1.3 + (i // 2) * 1.25
     caja(s, x, y, 2.7, 1.12, LIGHT)
@@ -663,28 +673,28 @@ texto(s, 6.55, 1.85, 2.8, 3.1, ["Recall de negativo < 0,88 dos semanas seguidas"
 # ------------------------------------------------------------------ 17. Demo y roadmap
 cfg_ej = {"etiqueta": "negativo", "confianza": "0,94", "decision": "automática", "alerta_vendedor": "true",
           "evidencia": "dejó de funcionar"}
-s = nueva("Demostración · Especialista en Machine Learning y Magíster en Ciencia de Datos", "El flujo completo, de la entrada a la decisión",
+s = nueva(f"Demostración · {POR_ROL[R_ML]} (Machine Learning) y {POR_ROL[R_DS]} (Ciencia de Datos)", "El flujo completo, de la entrada a la decisión",
           "Habla: Machine Learning y Gerencia de IA\n\n\"En la demo escribimos un comentario. El sistema valida la entrada, enmascara "
           "correos y teléfonos, calcula probabilidades calibradas y aplica el umbral: si está seguro decide y, si es negativo, alerta al "
           "vendedor; si no, lo manda a una persona. Además muestra la evidencia, las palabras que más pesaron. El código está en src/demo.py "
           "y en la sección 10 del notebook. La adopción va por fases: modo sombra, humano en el ciclo y solo después alertas automáticas.\"")
-pasos = ["Comentario", "Validar y enmascarar PII", f"{corto(REC)} + temperatura", "¿Confianza ≥ umbral?", "Etiqueta + evidencia"]
+pasos = ["Comentario", "Validar y enmascarar PII", "¿Fuera de dominio?", f"{corto(REC)} + temperatura", "¿Confianza ≥ umbral?", "Etiqueta + evidencia"]
 for j, p in enumerate(pasos):
-    x = 0.5 + j * 1.83
-    b = caja(s, x, 1.3, 1.65, 0.8, TEAL if j == 3 else LIGHT)
+    x = 0.5 + j * 1.53
+    b = caja(s, x, 1.3, 1.37, 0.8, TEAL if j in (2, 4) else LIGHT)
     tf = b.text_frame
     tf.word_wrap = True
     tf.text = p
     tf.paragraphs[0].alignment = PP_ALIGN.CENTER
-    tf.paragraphs[0].runs[0].font.size = Pt(11)
+    tf.paragraphs[0].runs[0].font.size = Pt(10.5)
     tf.paragraphs[0].runs[0].font.bold = True
-    tf.paragraphs[0].runs[0].font.color.rgb = rgb(WHITE if j == 3 else NAVY)
-    if j < 4:
-        a = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(x + 1.67), Inches(1.62), Inches(0.14), Inches(0.16))
+    tf.paragraphs[0].runs[0].font.color.rgb = rgb(WHITE if j in (2, 4) else NAVY)
+    if j < 5:
+        a = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(x + 1.38), Inches(1.62), Inches(0.13), Inches(0.16))
         a.fill.solid()
         a.fill.fore_color.rgb = rgb(LINE)
         a.line.fill.background()
-texto(s, 0.5, 2.2, 9, 0.3, "No → revisión humana   ·   Texto vacío o fuera de dominio → error controlado o abstención", size=11, color=MUTED)
+texto(s, 0.5, 2.2, 9, 0.3, "Fuera de dominio o confianza baja → revisión humana · ≤ 15 palabras → sin alerta automática · Demo web: python app/app.py (también en Render)", size=10.5, color=MUTED)
 caja(s, 0.5, 2.6, 4.3, 2.45, "0F172A")
 ruta_demo = os.path.join(RAIZ, "resultados", "demo_ejemplo.json")
 if os.path.exists(ruta_demo):

@@ -15,6 +15,7 @@ from pptx import Presentation
 
 sys.path.insert(0, os.path.dirname(__file__))
 from resumen import cargar, cifras, entero, n, pct  # noqa: E402
+from informe_texto import POR_ROL, caso_valor  # noqa: E402
 
 RAIZ = sys.argv[1] if len(sys.argv) > 1 else "."
 r = cargar(RAIZ)
@@ -27,12 +28,21 @@ rec_corto = {m["modelo"]: m["recall positivo"] for m in SES.get("modelos", []) i
 ic = f["ic"][f"BETO - {S3}"]
 
 ML, DS, GIA = "Especialista en Machine Learning", "Magíster en Ciencia de Datos", "Magíster en Gerencia en IA"
+OODT = (s4.get("ood") or {}).get("tabla", [{}])[0]
+RRS = {(x["modelo"], x["grupo"]): x for x in s4.get("resumen_robustez", [])}
+_a, _m = caso_valor(ab.get("cobertura") or 0, ab.get("recall_neg_efectivo") or 0, 1e6 / s4["info"]["BETO"]["thr"] / 3600 * 0.20)
+NETO = _m["neto"] - _a["neto"]
+def quien(rol):
+    if rol == f"{ML} y {DS}": return f"{POR_ROL[ML]} (Machine Learning) y {POR_ROL[DS]} (Ciencia de Datos)"
+    if rol == "Los tres roles": return "Los tres integrantes"
+    return f"{POR_ROL[rol]} ({rol})"
 COL = {ML: "1F6FB2", DS: "0FA3B1", GIA: "0B2E59", "Los tres roles": "475569"}
 
 # (n.º, título, rol, minutos, guion, cifras clave, transición)
 G = [
     (1, "Portada", GIA, 0.5,
-     "Buenos días. Somos un equipo con tres perfiles: Machine Learning, Ciencia de Datos y Gerencia en IA, y vamos a responder una "
+     f"Buenos días. Soy {POR_ROL[GIA]}, de Gerencia en IA; me acompañan {POR_ROL[ML]}, de Machine Learning, y {POR_ROL[DS]}, de "
+     "Ciencia de Datos. Vamos a responder una "
      "pregunta de negocio: ¿puede Mercado Libre saber qué siente un comprador leyendo solo su comentario, y cuánta complejidad vale "
      "la pena pagar para lograrlo? Comparamos tres familias de modelos: una línea base TF-IDF, las redes recurrentes de la sesión 3 "
      "y un Transformer preentrenado en español, BETO, de la sesión 4.",
@@ -54,7 +64,7 @@ G = [
      "eso la clase crítica es negativo, y los KPI son el tiempo de primera respuesta a negativos, menos de 24 horas, y el porcentaje "
      "de alertas que un agente confirma.",
      "Clase crítica: negativo · KPI: respuesta < 24 h, alertas confirmadas ≥ 80%",
-     "Le paso la palabra a Ciencia de Datos para ver si los datos permiten una evaluación honesta."),
+     f"Le paso la palabra a {POR_ROL[DS]}, que revisó si los datos permiten una evaluación honesta."),
     (4, "MeLiSA: 487 mil reseñas reales, auditadas", DS, 1.5,
      f"Usamos MeLiSA, un corpus público de la Universidad de Buenos Aires: {entero(A['filas'])} reseñas reales de 7 países y 5 "
      f"categorías. Antes de modelar auditamos, y cada hallazgo terminó en una decisión: {A['duplicados_texto']} textos repetidos se "
@@ -72,7 +82,7 @@ G = [
      f"sola vez. Como BETO en CPU no alcanza a evaluar 73 mil comentarios, todos los modelos se comparan además sobre la misma "
      f"validación y prueba comunes de {entero(A['n_comun'])}.",
      f"Solo título {n(A['f1_solo_titulo'])} > solo comentario {n(A['f1_solo_comentario'])} · 340.634 / 72.993 / 72.994",
-     "Con datos limpios y sin fuga, Machine Learning presenta los modelos."),
+     f"Con datos limpios y sin fuga, {POR_ROL[ML]} presenta los modelos."),
     (6, "Tres familias de modelos", ML, 1.0,
      "Comparamos tres formas de representar el texto. La línea base convierte cada comentario en TF-IDF de palabras y pares de "
      "palabras, como 'no llegó', y lo clasifica con regresión logística o SVM: no ve el orden. Las redes de la sesión 3 aprenden un "
@@ -80,7 +90,7 @@ G = [
      "decide. BETO, de la sesión 4, llega ya preentrenado con millones de textos en español, divide las palabras en subpalabras y usa "
      "atención. Las tres usan la misma partición y los mismos pesos de clase, porque el neutro es la mitad de frecuente.",
      "Misma partición · mismos pesos de clase · C y épocas elegidos en validación", "¿Qué tiene de distinto el Transformer?"),
-    (7, "Atención: cada palabra mira a todas las demás", ML, 1.25,
+    (7, "Atención: cada palabra mira a todas las demás", ML, 1.0,
      "La red recurrente tiene que cargar el inicio del comentario paso a paso, y lo va olvidando. El Transformer calcula, para cada "
      "palabra, qué tan relevante es cada una de las otras: softmax de Q por K transpuesta sobre raíz de d, multiplicado por V. Query "
      "es lo que busca la palabra, key lo que ofrece cada otra y value lo que aporta. A la izquierda está la atención real de la última "
@@ -88,7 +98,7 @@ G = [
      "una explicación causal, por eso la acompañamos con oclusión. Abajo, el tokenizador: palabras raras como 'exelente' se parten en "
      f"cuatro piezas, así que el costo se mide en subpalabras: {n(A['tokens_bert']['subpalabras_por_palabra'], 2)} por palabra.",
      "softmax(QKᵀ/√d)·V · 12 capas × 12 cabezas · atención ≠ causalidad", "¿Cómo lo adaptamos a nuestra tarea?"),
-    (8, "Fine-tuning de BETO", ML, 1.25,
+    (8, "Fine-tuning de BETO", ML, 1.0,
      f"Ajustamos todo BETO, 110 millones de parámetros, con las reglas de la sesión 4: AdamW con learning rate de 2e-5, warmup del 10%, "
      f"decaimiento lineal, padding dinámico y la mejor época elegida por F1 en validación. Sin GPU no era viable entrenar con 340 mil "
      f"comentarios, así que usamos {entero(f['n_train_bert'])} estratificados; tardó {n(f['seg_bert'] / 60, 0)} minutos. Para que la "
@@ -107,7 +117,7 @@ G = [
      f"{n(f['f1_neu']['BETO'])}. Y no basta con ver una diferencia: remuestreamos la prueba mil veces. La ventaja de BETO sobre {S3} es "
      f"{n(ic[0])} con intervalo del 95% entre {n(ic[1])} y {n(ic[2])}: no cruza el cero, así que es estadísticamente significativa.",
      f"Δ BETO − {S3} = +{n(ic[0])}, IC 95% [{n(ic[1])}; {n(ic[2])}]",
-     "Ciencia de Datos revisa dónde se siguen equivocando."),
+     "Carlos revisa dónde se siguen equivocando."),
     (11, "Dónde se equivocan los modelos", DS, 1.0,
      f"Revisamos los errores después de congelar el modelo; no cambiamos nada con lo que vimos aquí. El 92% de los errores de BETO "
      f"está en la frontera con el neutro: comentarios de tres estrellas que suenan positivos o negativos, y cuya etiqueta sale de las "
@@ -116,13 +126,15 @@ G = [
      f"92% de errores en el neutro · error grave: BETO {s4['neg_como_pos']['BETO']} vs TF-IDF {s4['neg_como_pos'][BASE]}",
      "Las métricas globales no lo dicen todo: probamos casos difíciles."),
     (12, "Contrafactuales y sesgo de longitud", DS, 1.0,
-     f"Probamos pares mínimos: con y sin negación, contraste invertido, errores de ortografía e ironía. Y encontramos el hallazgo más "
-     f"importante del proyecto: en este corpus el {pct(SES.get('pct_negativo_le15'), 0)} de los comentarios de 15 palabras o menos son "
-     f"negativos. Los modelos aprendieron que corto es igual a negativo: BETO solo reconoce el {pct(rec_corto.get('BETO'), 0)} de los "
-     f"positivos cortos. Si alargamos el mismo elogio, lo clasifica bien. Como los chats son cortos, esto se convierte en un control: "
-     "los comentarios cortos no disparan alertas automáticas hasta reentrenar con datos cortos balanceados.",
-     f"{pct(SES.get('pct_negativo_le15'), 0)} de los cortos son negativos · recall de positivos cortos: BETO {pct(rec_corto.get('BETO'), 0)}, TF-IDF {pct(rec_corto.get(BASE), 0)}",
-     "Gerencia explica cómo convertimos esto en una operación segura."),
+     f"Probamos pares mínimos: con y sin negación, contraste invertido, errores de ortografía e ironía, en versión corta y en versión "
+     f"larga. Con los textos cortos, BETO dice negativo casi siempre, incluso ante 'El producto es excelente, lo recomiendo'. La razón "
+     f"está en los datos: el {pct(SES.get('pct_negativo_le15'), 0)} de los comentarios de 15 palabras o menos son negativos, porque los "
+     f"autores del corpus prefirieron reseñas largas. BETO solo reconoce el {pct(rec_corto.get('BETO'), 0)} de los positivos cortos. "
+     f"Con las versiones largas mejora: el elogio ya sale positivo, aunque el contraste largo todavía sale neutro. Y los textos que no son "
+     f"reseñas ya no reciben etiqueta: el control de dominio los manda a revisión.",
+     f"{pct(SES.get('pct_negativo_le15'), 0)} de los cortos son negativos · recall de positivos cortos: BETO {pct(rec_corto.get('BETO'), 0)} · "
+     f"ajenos detectados: {pct(OODT.get('textos fuera de dominio detectados'), 0)} con {pct(OODT.get('reseñas de prueba marcadas'))} de falsas alarmas",
+     "Fabiola explica cómo convertimos esto en una operación segura."),
     (13, "Si el modelo no está seguro, decide una persona", GIA, 1.0,
      f"Primero calibramos las probabilidades con temperature scaling: así, una confianza de 0,8 significa acertar cerca del 80%. "
      f"Luego definimos la abstención: si la confianza es menor que el umbral, el comentario pasa a una persona. El umbral, "
@@ -133,36 +145,41 @@ G = [
      "¿Cuánto cuesta operar esto?"),
     (14, "Calidad frente a costo", GIA, 0.75,
      f"Medimos todo en el mismo portátil, sin GPU. TF-IDF responde en un milisegundo; BETO, en {n(f['p95']['BETO'], 0)} en el percentil "
-     f"95, y cuantizado a int8, en {n(f['p95']['BETO int8'], 0)}. Con el supuesto de una máquina de cuatro núcleos a 20 centavos de "
-     "dólar la hora, un millón de comentarios cuesta centavos con TF-IDF y unos 6 dólares con BETO: es poco frente al costo de un "
-     "agente o de un cliente perdido.",
-     f"p95: TF-IDF 1 ms · BETO {n(f['p95']['BETO'], 0)} ms · int8 {n(f['p95']['BETO int8'], 0)} ms · ≈ US$6 por millón",
+     f"95, y cuantizado a int8, en {n(f['p95']['BETO int8'], 0)}. Un millón de comentarios cuesta unos 6 dólares de cómputo con BETO. Con "
+     f"supuestos que marcamos como ilustrativos, el beneficio neto frente al muestreo de hoy ronda los {entero(NETO / 1000)} mil dólares al "
+     f"mes, y la implementación se paga en menos de un mes. Aunque la tasa de devoluciones evitadas fuera cinco veces menor, seguiría "
+     f"siendo positivo.",
+     f"p95: TF-IDF 1 ms · BETO {n(f['p95']['BETO'], 0)} ms · int8 {n(f['p95']['BETO int8'], 0)} ms · ≈ US$6 por millón · neto ≈ US${entero(NETO / 1000)} mil/mes",
      "Con calidad, riesgo y costo, aplicamos el criterio de adopción."),
     (15, "Criterio de adopción de la sesión 4", GIA, 1.0,
      "El criterio exige cuatro cosas a la vez: mejorar el F1 al menos 0,02 frente al campeón anterior, recall de negativo de 0,92 con "
      "abstención, cobertura de al menos 75% y latencia de 150 milisegundos o menos. Con el criterio estricto, ningún modelo cumple todo: "
      "BETO falla la latencia por una décima de milisegundo en un portátil sin GPU, y la versión int8 mejora solo 0,014. Como el proceso "
-     "es por lotes horarios, la latencia de un comentario no es la restricción real. Por eso no proponemos desplegar, sino un piloto "
+     "es por lotes horarios, y así lo fijamos desde la formulación con un quinto criterio, capacidad en lote, que BETO cumple con "
+     "margen: procesa una hora de comentarios en menos de tres minutos. Por eso no proponemos desplegar, sino un piloto "
      "condicionado en modo sombra.",
      "BETO: ✔ calidad ✔ recall ✔ cobertura ✘ latencia (150,1 ms) · int8: ✘ calidad (+0,014)",
      "¿Qué puede salir mal y cómo lo controlamos?"),
     (16, "Riesgos, controles y suspensión", GIA, 1.0,
-     "Cada riesgo tiene un control y un responsable; la matriz completa, con trece riesgos, está en el Excel. Lo más importante: el "
-     "modelo solo prioriza y alerta, nunca sanciona; la información personal se enmascara antes de procesar; reportamos el F1 por "
+     "Cada riesgo tiene un control y un responsable; la matriz completa, con catorce riesgos, está en el Excel. Lo más importante: el "
+     "modelo solo prioriza y alerta, nunca sanciona; lo que no parece una reseña va a revisión; la información personal se enmascara "
+     "antes de procesar; reportamos el F1 por "
      "país; y tenemos condiciones explícitas para suspender y volver al modelo simple: recall de negativo por debajo de 0,88 dos "
      "semanas, abstención mayor a 35% o cualquier exposición de datos personales.",
-     "13 riesgos · suspender si recall < 0,88, abstención > 35%, PII expuesta o precisión de alertas < 80%",
+     "14 riesgos · suspender si recall < 0,88, abstención > 35%, PII expuesta o precisión de alertas < 80%",
      "Ahora lo vemos funcionando."),
     (17, "Demostración del flujo completo", f"{ML} y {DS}", 2.0,
-     "Machine Learning: Escribimos un comentario. El sistema valida la entrada, enmascara correos y teléfonos, calcula las "
-     "probabilidades calibradas de BETO y aplica el umbral: si está seguro, decide; si es negativo, alerta al vendedor; si no está "
-     "seguro, lo manda a una persona. También muestra la evidencia, las palabras que más pesaron. "
-     "Ciencia de Datos: Ahora un comentario corto, 'Excelente producto, lo recomiendo'. Fíjense que el modelo lo marca como negativo, "
-     "el sesgo que mostramos, pero la salida trae una advertencia y no dispara la alerta. Así se ve un control funcionando. "
-     "[Comandos: python src/demo.py \"Me llegó el cargador y a la semana dejó de funcionar...\" y python src/demo.py \"Excelente "
-     "producto, lo recomiendo\"]",
-     "Entrada → PII → BETO + temperatura → umbral → etiqueta, confianza, alerta y evidencia",
-     "Cerramos con la recomendación de los tres roles."),
+     "Machine Learning: Abrimos la demo web en el navegador. Escribimos una queja larga sobre un producto que dejó de funcionar a la "
+     "semana. El sistema valida la entrada, enmascara correos y teléfonos, revisa que el texto sí sea una reseña, calcula las "
+     "probabilidades calibradas de BETO y aplica el umbral: como está seguro y es negativo, genera la alerta y muestra las palabras que "
+     "más pesaron. "
+     "Ciencia de Datos: Ahora tres casos difíciles. Primero, 'Excelente producto, lo recomiendo': el modelo dice negativo por el sesgo de "
+     "longitud, pero la salida trae la advertencia y no dispara la alerta. Segundo, el mismo elogio con más contexto: ahora sale positivo. "
+     "Tercero, una frase sobre un partido de fútbol: el control de dominio la reconoce como ajena y la manda a revisión, en lugar de "
+     "inventarle un sentimiento. "
+     "[python app/app.py y abrir http://localhost:5000; si falla, usar la captura de respaldo o python src/demo.py \"texto\"]",
+     "Entrada → PII → ¿es reseña? → BETO + temperatura → umbral → etiqueta, alerta y evidencia",
+     "Cerramos con la recomendación de los tres."),
     (18, "Recomendación y siguientes pasos", "Los tres roles", 1.0,
      "Machine Learning: BETO es el mejor modelo, con una ventaja significativa, y lo logró con veinte veces menos datos. "
      "Ciencia de Datos: la evaluación es válida, sin fuga y con la prueba usada una sola vez, pero el corpus tiene un sesgo de longitud "
@@ -172,7 +189,7 @@ G = [
      "sus preguntas.",
      "Piloto en modo sombra · 3 controles · siguiente experimento con GPU", ""),
 ]
-assert abs(sum(g[3] for g in G) - 20) < 0.01, sum(g[3] for g in G)
+assert abs(sum(g[3] for g in G) - 19.5) < 0.01, sum(g[3] for g in G)
 
 PREGUNTAS = [
     ("¿Qué decisión mejora el sistema y quién la toma?", GIA,
@@ -186,8 +203,9 @@ PREGUNTAS = [
      f"{s4['neg_como_pos'][BASE]} de TF-IDF, y con abstención el recall de negativo es {n(ab.get('recall_neg_auto'))}."),
     ("¿Qué ocurre cuando el sistema no sabe o recibe texto fuera de dominio?", ML,
      "Si la confianza calibrada es menor que el umbral, se abstiene y el caso va a una persona; el texto vacío o demasiado corto se "
-     "rechaza antes del modelo. Limitación honesta: un texto fuera de dominio puede recibir confianza alta; por eso se monitorea la "
-     "tasa de abstención y la suite de contrafactuales es una prueba de regresión."),
+     f"rechaza antes del modelo. Además, un control compara el texto con reseñas reales usando la representación de BETO: detecta el "
+     f"{pct(OODT.get('textos fuera de dominio detectados'), 0)} de 20 textos ajenos y solo marca el {pct(OODT.get('reseñas de prueba marcadas'))} "
+     f"de las reseñas reales; lo detectado va a revisión."),
     ("¿Qué datos no debería procesar?", DS,
      "Datos personales (se enmascaran), texto en otros idiomas o de otros dominios sin una nueva evaluación, y nunca para sancionar "
      "personas de forma automática. La data card lista los usos no previstos."),
@@ -256,7 +274,7 @@ run = t.add_run("Guion de la sustentación por rol")
 run.bold, run.font.size, run.font.color.rgb = True, Pt(22), RGBColor(0x0B, 0x2E, 0x59)
 doc.add_paragraph("Sentimiento en reseñas de Mercado Libre (MeLiSA) · Proyecto final de Procesamiento de Lenguaje Natural · "
                   "Universidad Ean · Docente: Gerson José Moreno Morales")
-doc.add_paragraph("Duración: 20 minutos de presentación + preguntas. Todos los integrantes hablan desde su rol y la narrativa es una "
+doc.add_paragraph("Duración: 20 minutos de presentación (el guion suma 19,5 para dejar margen) más preguntas. Todos los integrantes hablan desde su rol y la narrativa es una "
                   "sola: Gerencia abre con el problema, Ciencia de Datos valida los datos, Machine Learning presenta los modelos, Ciencia "
                   "de Datos muestra los límites, Gerencia convierte la evidencia en una decisión gobernada y los tres cierran juntos.")
 
@@ -267,19 +285,19 @@ for g in G:
         parte = g[3] / (2 if g[2] == f"{ML} y {DS}" else 3 if g[2] == "Los tres roles" else 1)
         mins[rol] = mins.get(rol, 0) + parte
 diaps = {rol: ", ".join(str(g[0]) for g in G if rol in g[2] or g[2] == "Los tres roles") for rol in [GIA, DS, ML]}
-tabla([["Rol", "Responsabilidad en la sustentación", "Diapositivas", "Minutos"],
-       [GIA, "Problema, valor y KPI; abstención, costo, criterio de adopción, riesgos y recomendación", diaps[GIA], n(mins[GIA], 1)],
-       [DS, "Datos, auditoría, fuga y partición; errores, contrafactuales y sesgo de longitud; parte de la demo", diaps[DS], n(mins[DS], 1)],
-       [ML, "Arquitecturas, atención y BETO, fine-tuning, resultados e intervalos de confianza; demo", diaps[ML], n(mins[ML], 1)]],
+tabla([["Integrante y rol", "Responsabilidad en la sustentación", "Diapositivas", "Minutos"],
+       [f"{POR_ROL[GIA]} · {GIA}", "Problema, valor y KPI; abstención, costo, criterio de adopción, riesgos y recomendación", diaps[GIA], n(mins[GIA], 1)],
+       [f"{POR_ROL[DS]} · {DS}", "Datos, auditoría, fuga y partición; errores, contrafactuales y sesgo de longitud; parte de la demo", diaps[DS], n(mins[DS], 1)],
+       [f"{POR_ROL[ML]} · {ML}", "Arquitecturas, atención y BETO, fine-tuning, resultados e intervalos de confianza; demo", diaps[ML], n(mins[ML], 1)]],
       [4.2, 8.3, 2.6, 1.8], colores={(1, 0): "E2E8F0", (2, 0): "E0F7FA", (3, 0): "DBEAFE"})
 tabla([["Bloque (instrucciones del curso)", "Tiempo", "Diapositivas", "Habla"],
-       ["Problema, usuario y decisión", "3 min", "1–3", "Gerencia en IA"],
-       ["Datos, calidad, privacidad y partición", "3 min", "4–5", "Ciencia de Datos"],
-       ["Baseline, modelo avanzado y diseño experimental", "6 min", "6–10", "Machine Learning"],
-       ["Resultados, errores, robustez y costo", "3,75 min", "11–14", "Ciencia de Datos y Gerencia en IA"],
-       ["Riesgos, gobierno y revisión humana", "2 min", "15–16", "Gerencia en IA"],
-       ["Demostración", "2 min", "17", "Machine Learning y Ciencia de Datos"],
-       ["Recomendación y siguiente paso", "1 min", "18", "Los tres roles"]], [6.6, 2, 2.4, 5.9])
+       ["Problema, usuario y decisión", "2,75 min", "1–3", "Fabiola · Gerencia en IA"],
+       ["Datos, calidad, privacidad y partición", "3 min", "4–5", "Carlos · Ciencia de Datos"],
+       ["Baseline, modelo avanzado y diseño experimental", "5 min", "6–10", "Pedro · Machine Learning"],
+       ["Resultados, errores, robustez y costo", "3,75 min", "11–14", "Carlos y Fabiola"],
+       ["Riesgos, gobierno y revisión humana", "2 min", "15–16", "Fabiola · Gerencia en IA"],
+       ["Demostración", "2 min", "17", "Pedro y Carlos"],
+       ["Recomendación y siguiente paso", "1 min", "18", "Los tres"]], [6.6, 2, 2.4, 5.9])
 
 doc.add_heading("2. Guion diapositiva por diapositiva", 1)
 acum = 0.0
@@ -288,7 +306,7 @@ for num, titulo, rol, minutos, texto, cif, trans in G:
     acum += minutos
     h = doc.add_heading(f"Diapositiva {num}. {titulo}", 2)
     p = doc.add_paragraph()
-    rr = p.add_run(f"{rol}  ·  {n(minutos, 2).rstrip('0').rstrip(',')} min  ·  minuto {n(ini, 2).rstrip('0').rstrip(',') or '0'} a "
+    rr = p.add_run(f"{quien(rol)}  ·  {n(minutos, 2).rstrip('0').rstrip(',')} min  ·  minuto {n(ini, 2).rstrip('0').rstrip(',') or '0'} a "
                    f"{n(acum, 2).rstrip('0').rstrip(',')}")
     rr.bold, rr.font.size = True, Pt(10)
     rr.font.color.rgb = RGBColor.from_string(COL.get(rol, "475569"))
@@ -311,8 +329,8 @@ tabla([["Pregunta", "Responde", "Respuesta corta"]] + [[q, rol.replace("Especial
 
 doc.add_heading("4. Recomendaciones para la sustentación", 1)
 for t_ in ["Cada persona dice su rol al tomar la palabra (“Desde Ciencia de Datos…”). Usen las transiciones para no fragmentar la narrativa.",
-           "Ensayen con cronómetro: el bloque de Machine Learning (6 min) es el que más tiende a alargarse.",
-           "Tengan la demo abierta antes de empezar (la primera carga de BETO tarda unos segundos) y una captura de respaldo por si falla.",
+           "Ensayen con cronómetro: el bloque de Machine Learning (5 min) es el que más tiende a alargarse; el guion deja 30 segundos de margen.",
+           "Tengan la demo web abierta antes de empezar (python app/app.py; la primera carga de BETO tarda unos segundos) y la página docs/Demo_Respaldo.html por si algo falla.",
            "No lean las diapositivas: las cifras clave de cada una están en este guion y en las notas del orador del PPT.",
            "Si preguntan por algo que no se ejecutó, díganlo así: está en “siguiente experimento”."]:
     doc.add_paragraph(t_, style="List Bullet")
@@ -327,7 +345,7 @@ ruta_ppt = os.path.join(RAIZ, "docs", "Presentacion_Proyecto_PLN.pptx")
 prs = Presentation(ruta_ppt)
 assert len(prs.slides) == len(G)
 for sl, (num, titulo, rol, minutos, texto, cif, trans) in zip(prs.slides, G):
-    nota = f"Habla: {rol} · {n(minutos, 2).rstrip('0').rstrip(',')} min\n\n{texto}\n\nCifras clave: {cif}"
+    nota = f"Habla: {quien(rol)} · {n(minutos, 2).rstrip('0').rstrip(',')} min\n\n{texto}\n\nCifras clave: {cif}"
     if trans:
         nota += f"\n\nTransición: “{trans}”"
     sl.notes_slide.notes_text_frame.text = nota
