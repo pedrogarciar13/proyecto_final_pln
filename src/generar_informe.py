@@ -600,11 +600,14 @@ p("Repositorio: https://github.com/pedrogarciar13/proyecto_final_pln. Para repro
   "en la terminal o con python app/app.py en el navegador (con BETO). También está publicada en línea de dos formas: con BETO en https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto, donde el modelo comprimido a int8 corre en el navegador del visitante (coincide con el original en el 98% de las etiquetas de una muestra de 1.000 reseñas), y con el modelo de respaldo TF-IDF en https://sentimiento-melisa-demo.onrender.com. Los documentos se regeneran desde resultados/resultados.json con los scripts "
   "de src/.")
 doc.add_heading("F. Uso de herramientas de IA generativa", 2)
-p("Como pide el curso, declaramos el uso de IA generativa. Usamos Claude (Anthropic) como asistente de programación para depurar y "
-  "organizar el código del notebook, escribir los scripts que generan la presentación, este informe y la matriz de riesgos, y revisar "
-  "la redacción. Las decisiones de diseño, la interpretación de los resultados, la revisión manual de errores y la recomendación son "
-  "del equipo. Todas las cifras salen de la ejecución del notebook y las verificamos; no enviamos datos confidenciales a servicios "
-  "externos, porque el corpus es público.")
+p("Como pide el curso, declaramos el uso de IA generativa. Usamos Claude Code (Anthropic) como asistente principal de programación y "
+  "redacción. Escribió y depuró buena parte del código del notebook, los scripts que generan los documentos y las demos; propuso "
+  "análisis como el control de fuera de dominio y el caso de valor con sensibilidad, y redactó los borradores de este informe. El "
+  "equipo definió el problema, revisó el código y los resultados, validó las conclusiones y tomó la decisión final. Ninguna cifra se "
+  "escribió a mano: todas salen de ejecutar el notebook y los documentos se generan desde resultados/resultados.json. Las "
+  "interpretaciones que no coincidieron con lo ejecutado se corrigieron. El caso de valor usa supuestos ilustrativos, no datos medidos. "
+  "No usamos datos confidenciales: el corpus es público y enmascaramos los datos personales. El detalle está en DECLARACION_IA.md, en "
+  "el repositorio.")
 doc.add_heading("G. Referencias", 2)
 for ref in ["Vaswani, A. et al. (2017). Attention Is All You Need. NeurIPS.",
             "Devlin, J. et al. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. NAACL.",

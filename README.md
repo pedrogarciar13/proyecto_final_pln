@@ -90,7 +90,7 @@ navegador (ver arriba).
 ├── resultados/                             Métricas, figuras, decisión del comité y referencia del control de dominio
 ├── docs/                                   Presentación, informe, guion y matriz de riesgos
 ├── render.yaml                             Despliegue de la demo en Render
-└── requirements.txt · .env.example · LICENSE
+└── requirements.txt · .env.example · LICENSE · DECLARACION_IA.md
 ```
 
 ## Entregables
@@ -131,7 +131,7 @@ licencia "other"; las usamos con fines académicos. El código del repositorio e
 licencias. Más detalle en [`data/README.md`](data/README.md) y [`LICENSE`](LICENSE).
 
 ## Uso de IA generativa
-Como pide el curso, lo declaramos: usamos Claude (Anthropic) como asistente de programación para depurar y organizar el código,
-escribir los scripts que generan los documentos y revisar la redacción. Las decisiones de diseño, la interpretación de los
-resultados, la revisión manual de errores y la recomendación son nuestras. Todas las cifras salen de la ejecución del notebook y las
-verificamos. No enviamos datos confidenciales a ningún servicio externo: el corpus es público.
+Usamos Claude Code (Anthropic) como asistente principal de programación y redacción: escribió y depuró buena parte del código,
+propuso varios análisis y redactó los borradores de los documentos. El equipo definió el problema, revisó y validó los resultados y
+tomó la decisión final. Todas las cifras salen de ejecutar el notebook, y no usamos datos confidenciales porque el corpus es público.
+El detalle (herramientas, verificación, datos, evidencia y trazabilidad) está en [`DECLARACION_IA.md`](DECLARACION_IA.md).
