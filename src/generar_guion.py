@@ -177,7 +177,7 @@ G = [
      "longitud, pero la salida trae la advertencia y no dispara la alerta. Segundo, el mismo elogio con más contexto: ahora sale positivo. "
      "Tercero, una frase sobre un partido de fútbol: el control de dominio la reconoce como ajena y la manda a revisión, en lugar de "
      "inventarle un sentimiento. "
-     "[abrir https://sentimiento-melisa-demo.onrender.com (o python app/app.py y http://localhost:5000 para mostrar BETO); si falla, usar la captura de respaldo o python src/demo.py \"texto\"]",
+     "[abrir https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto (BETO en el navegador); si no carga, https://sentimiento-melisa-demo.onrender.com (TF-IDF) o python app/app.py en local; si todo falla, usar la captura de respaldo o python src/demo.py \"texto\"]",
      "Entrada → PII → ¿es reseña? → BETO + temperatura → umbral → etiqueta, alerta y evidencia",
      "Cerramos con la recomendación de los tres."),
     (18, "Recomendación y siguientes pasos", "Los tres roles", 1.0,
@@ -330,7 +330,7 @@ tabla([["Pregunta", "Responde", "Respuesta corta"]] + [[q, rol.replace("Especial
 doc.add_heading("4. Recomendaciones para la sustentación", 1)
 for t_ in ["Cada persona dice su rol al tomar la palabra (“Desde Ciencia de Datos…”). Usen las transiciones para no fragmentar la narrativa.",
            "Ensayen con cronómetro: el bloque de Machine Learning (5 min) es el que más tiende a alargarse; el guion deja 30 segundos de margen.",
-           "Tengan la demo abierta antes de empezar: https://sentimiento-melisa-demo.onrender.com (el plan gratuito se duerme y la primera visita tarda unos 50 segundos) o, para mostrar BETO, python app/app.py en local. Tengan también la página docs/Demo_Respaldo.html por si algo falla.",
+           "Tengan la demo abierta antes de empezar: https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto (la primera vez descarga BETO, unos 110 MB, y tarda entre 20 y 60 segundos). Como respaldo, https://sentimiento-melisa-demo.onrender.com (se duerme y la primera visita tarda unos 50 segundos) o python app/app.py en local. Tengan también la página docs/Demo_Respaldo.html por si algo falla.",
            "No lean las diapositivas: las cifras clave de cada una están en este guion y en las notas del orador del PPT.",
            "Si preguntan por algo que no se ejecutó, díganlo así: está en “siguiente experimento”."]:
     doc.add_paragraph(t_, style="List Bullet")

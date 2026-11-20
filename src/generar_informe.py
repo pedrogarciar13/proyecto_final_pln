@@ -597,7 +597,7 @@ figura("interpretabilidad.png", 15, "Figura D3. Atención de la última capa y o
 doc.add_heading("E. Reproducibilidad", 2)
 p("Repositorio: https://github.com/pedrogarciar13/proyecto_final_pln. Para reproducir: instalar requirements.txt, poner la base completa "
   "en data/ (instrucciones en data/README.md) y ejecutar el notebook de principio a fin. La demo corre con python src/demo.py \"texto\" "
-  "en la terminal o con python app/app.py en el navegador (con BETO). También está publicada en https://sentimiento-melisa-demo.onrender.com con el modelo liviano TF-IDF, porque BETO no cabe en el plan gratuito de Render. Los documentos se regeneran desde resultados/resultados.json con los scripts "
+  "en la terminal o con python app/app.py en el navegador (con BETO). También está publicada en línea de dos formas: con BETO en https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto, donde el modelo comprimido a int8 corre en el navegador del visitante (coincide con el original en el 98% de las etiquetas de una muestra de 1.000 reseñas), y con el modelo de respaldo TF-IDF en https://sentimiento-melisa-demo.onrender.com. Los documentos se regeneran desde resultados/resultados.json con los scripts "
   "de src/.")
 doc.add_heading("F. Uso de herramientas de IA generativa", 2)
 p("Como pide el curso, declaramos el uso de IA generativa. Usamos Claude (Anthropic) como asistente de programación para depurar y "

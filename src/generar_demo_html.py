@@ -54,7 +54,7 @@ def main():
 <style>main {{ display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }} .entrada {{ font-style:italic; color:#334155; }}</style>
 </head><body><header><div class="wrap"><small>Proyecto final PLN · Universidad Ean · respaldo de la demostración</small>
 <h1>¿Qué siente el comprador?</h1><p>Salida real del servicio con el modelo <b>{srv.nombre}</b> (umbral {srv.umbral:.2f}) · generada el {date.today():%d/%m/%Y}.
-La demo interactiva está en <a href="https://sentimiento-melisa-demo.onrender.com">sentimiento-melisa-demo.onrender.com</a> (TF-IDF) y en <code>python app/app.py</code> (BETO, local).</p></div></header><main>{tarjetas}</main>
+La demo interactiva con BETO está en <a href="https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto">huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto</a>; el respaldo con TF-IDF, en <a href="https://sentimiento-melisa-demo.onrender.com">sentimiento-melisa-demo.onrender.com</a>.</p></div></header><main>{tarjetas}</main>
 <footer>Pedro García Romero · Carlos Trilleras · Fabiola Aldana Mora. Barras: probabilidad calibrada por clase; la línea vertical es el umbral de abstención.</footer></body></html>"""
     salida = os.path.join(RAIZ, "docs", "Demo_Respaldo.html")
     open(salida, "w", encoding="utf-8").write(pagina)

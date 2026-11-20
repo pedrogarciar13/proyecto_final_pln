@@ -41,8 +41,15 @@ Todos los modelos se compararon sobre la misma prueba de 5.000 comentarios:
 
 ## Demostración
 
-**Demo en línea:** https://sentimiento-melisa-demo.onrender.com (corre TF-IDF; la primera visita puede tardar
-unos 50 segundos porque el plan gratuito se duerme).
+**Demo en línea con BETO:** https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto
+
+El modelo ganador corre en el navegador de quien abre la página, comprimido a int8 (110 MB; la primera carga
+tarda entre 20 y 60 segundos). En una muestra de 1.000 reseñas coincide con BETO original en el 98% de las etiquetas (F1 0,799 frente
+a 0,806) y detecta los 20 textos fuera de dominio de la prueba. El código está en [`demo_navegador/`](demo_navegador/) y el modelo en
+[pedrogarciar13/beto-sentimiento-melisa](https://huggingface.co/pedrogarciar13/beto-sentimiento-melisa).
+
+**Respaldo en línea con TF-IDF:** https://sentimiento-melisa-demo.onrender.com (la primera visita puede tardar unos 50 segundos porque el plan
+gratuito se duerme).
 
 
 **En el navegador (recomendado para la sustentación).** La interfaz muestra el flujo completo: enmascarar datos personales, revisar si
@@ -52,6 +59,7 @@ pip install -r requirements.txt
 python app/app.py            # abre http://localhost:5000
 ```
 Si existe la carpeta `modelos/` (la genera el notebook), la demo usa BETO. Si no, usa TF-IDF con la misma política de decisión.
+Para tener BETO en local sin correr el notebook: `hf download pedrogarciar13/beto-sentimiento-melisa --local-dir modelos/beto_sentimiento`.
 
 **En la terminal:**
 ```bash
@@ -60,12 +68,13 @@ python src/demo.py "Me llegó el cargador y a la semana dejó de funcionar, y el
 
 **En Render.** La versión en línea (https://sentimiento-melisa-demo.onrender.com) se despliega con `render.yaml`: en Render, *New → Blueprint* y se elige
 este repositorio. El plan gratuito tiene 512 MB de memoria y BETO no cabe, así que en Render la demo usa TF-IDF + regresión logística (el
-modelo va en `app/modelo/`) con la misma calibración, abstención y regla de comentarios cortos. Para mostrar BETO en línea se
-necesita un plan de al menos 2 GB o un Space de Hugging Face.
+modelo va en `app/modelo/`) con la misma calibración, abstención y regla de comentarios cortos. Por eso BETO se publicó aparte, en el
+navegador (ver arriba).
 
 ## Qué hay en el repositorio
 ```
 ├── Proyecto_PLN_Sentimiento_MeLiSA.ipynb   Notebook principal, ejecutado de principio a fin
+├── demo_navegador/                        Demo estática con BETO en el navegador (publicada en Hugging Face)
 ├── app/                                    Demo web (Flask): app.py, plantilla HTML y modelo liviano para Render
 ├── data/
 │   ├── README.md                           Data card: origen, periodo, diccionario, auditoría, limitaciones
@@ -93,7 +102,7 @@ necesita un plan de al menos 2 GB o un Space de Hugging Face.
 | 4 | Informe técnico | [`docs/Informe_Tecnico_Proyecto_PLN.docx`](docs/Informe_Tecnico_Proyecto_PLN.docx) |
 | 5 | Presentación (18 diapositivas) y guion por rol | [`docs/Presentacion_Proyecto_PLN.pptx`](docs/Presentacion_Proyecto_PLN.pptx) · [`docs/Guion_Sustentacion_por_Rol.docx`](docs/Guion_Sustentacion_por_Rol.docx) |
 | 6 | Matriz de riesgos | [`docs/Matriz_Riesgos.xlsx`](docs/Matriz_Riesgos.xlsx) |
-| 7 | Demostración | https://sentimiento-melisa-demo.onrender.com (en línea), `python app/app.py` (web con BETO), `python src/demo.py` (terminal) y sección 10 del notebook |
+| 7 | Demostración | https://huggingface.co/spaces/pedrogarciar13/sentimiento-melisa-beto (BETO en línea), https://sentimiento-melisa-demo.onrender.com (respaldo), `python app/app.py` (local), `python src/demo.py` (terminal) y sección 10 del notebook |
 
 ## Cómo reproducirlo
 Usamos Python 3.11 en un portátil con Windows 11, 12 hilos de CPU, 16 GB de RAM y sin GPU. La corrida completa del notebook tomó

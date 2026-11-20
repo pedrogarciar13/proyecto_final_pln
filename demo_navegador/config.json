@@ -1,0 +1,13 @@
+{
+ "T": 1.335411579102384,
+ "umbral": 0.69,
+ "umbral_emb": 0.857400119304657,
+ "k": 5,
+ "max_len": 128,
+ "clases": [
+  "negativo",
+  "neutro",
+  "positivo"
+ ],
+ "n_ref": 3000
+}
