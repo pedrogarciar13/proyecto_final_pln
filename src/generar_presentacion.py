@@ -694,7 +694,7 @@ for j, p in enumerate(pasos):
         a.fill.solid()
         a.fill.fore_color.rgb = rgb(LINE)
         a.line.fill.background()
-texto(s, 0.5, 2.2, 9, 0.3, "Fuera de dominio o confianza baja → revisión humana · ≤ 15 palabras → sin alerta automática · Demo web: python app/app.py (también en Render)", size=10.5, color=MUTED)
+texto(s, 0.5, 2.2, 9, 0.3, "Fuera de dominio o confianza baja → revisión humana · ≤ 15 palabras → sin alerta automática · Demo en línea: sentimiento-melisa-demo.onrender.com · BETO en local: python app/app.py", size=10.5, color=MUTED)
 caja(s, 0.5, 2.6, 4.3, 2.45, "0F172A")
 ruta_demo = os.path.join(RAIZ, "resultados", "demo_ejemplo.json")
 if os.path.exists(ruta_demo):

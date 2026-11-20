@@ -41,6 +41,10 @@ Todos los modelos se compararon sobre la misma prueba de 5.000 comentarios:
 
 ## Demostración
 
+**Demo en línea:** https://sentimiento-melisa-demo.onrender.com (corre TF-IDF; la primera visita puede tardar
+unos 50 segundos porque el plan gratuito se duerme).
+
+
 **En el navegador (recomendado para la sustentación).** La interfaz muestra el flujo completo: enmascarar datos personales, revisar si
 el texto es una reseña, clasificar, aplicar el umbral y explicar la decisión.
 ```bash
@@ -54,8 +58,8 @@ Si existe la carpeta `modelos/` (la genera el notebook), la demo usa BETO. Si no
 python src/demo.py "Me llegó el cargador y a la semana dejó de funcionar, y el vendedor nunca respondió"
 ```
 
-**En Render.** El archivo `render.yaml` despliega la demo web como servicio gratuito: en Render, *New → Blueprint* y se elige este
-repositorio. El plan gratuito tiene 512 MB de memoria y BETO no cabe, así que en Render la demo usa TF-IDF + regresión logística (el
+**En Render.** La versión en línea (https://sentimiento-melisa-demo.onrender.com) se despliega con `render.yaml`: en Render, *New → Blueprint* y se elige
+este repositorio. El plan gratuito tiene 512 MB de memoria y BETO no cabe, así que en Render la demo usa TF-IDF + regresión logística (el
 modelo va en `app/modelo/`) con la misma calibración, abstención y regla de comentarios cortos. Para mostrar BETO en línea se
 necesita un plan de al menos 2 GB o un Space de Hugging Face.
 
@@ -89,7 +93,7 @@ necesita un plan de al menos 2 GB o un Space de Hugging Face.
 | 4 | Informe técnico | [`docs/Informe_Tecnico_Proyecto_PLN.docx`](docs/Informe_Tecnico_Proyecto_PLN.docx) |
 | 5 | Presentación (18 diapositivas) y guion por rol | [`docs/Presentacion_Proyecto_PLN.pptx`](docs/Presentacion_Proyecto_PLN.pptx) · [`docs/Guion_Sustentacion_por_Rol.docx`](docs/Guion_Sustentacion_por_Rol.docx) |
 | 6 | Matriz de riesgos | [`docs/Matriz_Riesgos.xlsx`](docs/Matriz_Riesgos.xlsx) |
-| 7 | Demostración | `python app/app.py` (web), `python src/demo.py` (terminal) y sección 10 del notebook |
+| 7 | Demostración | https://sentimiento-melisa-demo.onrender.com (en línea), `python app/app.py` (web con BETO), `python src/demo.py` (terminal) y sección 10 del notebook |
 
 ## Cómo reproducirlo
 Usamos Python 3.11 en un portátil con Windows 11, 12 hilos de CPU, 16 GB de RAM y sin GPU. La corrida completa del notebook tomó
