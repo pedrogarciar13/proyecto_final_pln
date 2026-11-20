@@ -2,9 +2,9 @@
 
 EQUIPO = [("Pedro García Romero", "Especialista en Machine Learning"),
           ("Carlos Trilleras", "Magíster en Ciencia de Datos"),
-          ("Fabiola Aldana Mora", "Magíster en Gerencia en IA")]
+          ("Fabiola Aldana Mora", "Magíster en Gerencia de IA")]
 POR_ROL = {rol: nombre for nombre, rol in EQUIPO}
-ML, DS, GIA = "Especialista en Machine Learning", "Magíster en Ciencia de Datos", "Magíster en Gerencia en IA"
+ML, DS, GIA = "Especialista en Machine Learning", "Magíster en Ciencia de Datos", "Magíster en Gerencia de IA"
 
 # Supuestos ilustrativos del caso de valor (no son cifras internas de Mercado Libre)
 SUPUESTOS = {

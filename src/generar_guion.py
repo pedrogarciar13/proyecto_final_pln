@@ -27,7 +27,7 @@ SES = f["sesgo"] or {}
 rec_corto = {m["modelo"]: m["recall positivo"] for m in SES.get("modelos", []) if m["segmento"].startswith("≤")}
 ic = f["ic"][f"BETO - {S3}"]
 
-ML, DS, GIA = "Especialista en Machine Learning", "Magíster en Ciencia de Datos", "Magíster en Gerencia en IA"
+ML, DS, GIA = "Especialista en Machine Learning", "Magíster en Ciencia de Datos", "Magíster en Gerencia de IA"
 OODT = (s4.get("ood") or {}).get("tabla", [{}])[0]
 RRS = {(x["modelo"], x["grupo"]): x for x in s4.get("resumen_robustez", [])}
 _a, _m = caso_valor(ab.get("cobertura") or 0, ab.get("recall_neg_efectivo") or 0, 1e6 / s4["info"]["BETO"]["thr"] / 3600 * 0.20)
@@ -41,7 +41,7 @@ COL = {ML: "1F6FB2", DS: "0FA3B1", GIA: "0B2E59", "Los tres roles": "475569"}
 # (n.º, título, rol, minutos, guion, cifras clave, transición)
 G = [
     (1, "Portada", GIA, 0.5,
-     f"Buenos días. Soy {POR_ROL[GIA]}, de Gerencia en IA; me acompañan {POR_ROL[ML]}, de Machine Learning, y {POR_ROL[DS]}, de "
+     f"Buenos días. Soy {POR_ROL[GIA]}, de Gerencia de IA; me acompañan {POR_ROL[ML]}, de Machine Learning, y {POR_ROL[DS]}, de "
      "Ciencia de Datos. Vamos a responder una "
      "pregunta de negocio: ¿puede Mercado Libre saber qué siente un comprador leyendo solo su comentario, y cuánta complejidad vale "
      "la pena pagar para lograrlo? Comparamos tres familias de modelos: una línea base TF-IDF, las redes recurrentes de la sesión 3 "
@@ -184,7 +184,7 @@ G = [
      "Machine Learning: BETO es el mejor modelo, con una ventaja significativa, y lo logró con veinte veces menos datos. "
      "Ciencia de Datos: la evaluación es válida, sin fuga y con la prueba usada una sola vez, pero el corpus tiene un sesgo de longitud "
      "que hay que corregir con datos cortos balanceados. "
-     "Gerencia en IA: recomendamos un piloto de BETO en modo sombra, por lotes y con abstención; los comentarios cortos no disparan "
+     "Gerencia de IA: recomendamos un piloto de BETO en modo sombra, por lotes y con abstención; los comentarios cortos no disparan "
      "alertas y TF-IDF queda como respaldo. El siguiente experimento es BETO con GPU y la base completa. Gracias, quedamos atentos a "
      "sus preguntas.",
      "Piloto en modo sombra · 3 controles · siguiente experimento con GPU", ""),
@@ -291,11 +291,11 @@ tabla([["Integrante y rol", "Responsabilidad en la sustentación", "Diapositivas
        [f"{POR_ROL[ML]} · {ML}", "Arquitecturas, atención y BETO, fine-tuning, resultados e intervalos de confianza; demo", diaps[ML], n(mins[ML], 1)]],
       [4.2, 8.3, 2.6, 1.8], colores={(1, 0): "E2E8F0", (2, 0): "E0F7FA", (3, 0): "DBEAFE"})
 tabla([["Bloque (instrucciones del curso)", "Tiempo", "Diapositivas", "Habla"],
-       ["Problema, usuario y decisión", "2,75 min", "1–3", "Fabiola · Gerencia en IA"],
+       ["Problema, usuario y decisión", "2,75 min", "1–3", "Fabiola · Gerencia de IA"],
        ["Datos, calidad, privacidad y partición", "3 min", "4–5", "Carlos · Ciencia de Datos"],
        ["Baseline, modelo avanzado y diseño experimental", "5 min", "6–10", "Pedro · Machine Learning"],
        ["Resultados, errores, robustez y costo", "3,75 min", "11–14", "Carlos y Fabiola"],
-       ["Riesgos, gobierno y revisión humana", "2 min", "15–16", "Fabiola · Gerencia en IA"],
+       ["Riesgos, gobierno y revisión humana", "2 min", "15–16", "Fabiola · Gerencia de IA"],
        ["Demostración", "2 min", "17", "Pedro y Carlos"],
        ["Recomendación y siguiente paso", "1 min", "18", "Los tres"]], [6.6, 2, 2.4, 5.9])
 

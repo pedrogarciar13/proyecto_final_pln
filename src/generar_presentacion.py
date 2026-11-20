@@ -212,11 +212,11 @@ texto(s, 0.6, 2.75, 8.6, 0.8, "Línea base TF-IDF frente a RNN/LSTM/GRU (sesión
       "con abstención, calibración y gobierno", size=15, color="CADCFC")
 caja(s, 0.6, 3.85, 8.8, 0.02, TEAL, forma=MSO_SHAPE.RECTANGLE)
 texto(s, 0.6, 4.0, 8.8, 0.3, "   ·   ".join(nom for nom, _ in EQUIPO), size=13, bold=True, color=WHITE)
-texto(s, 0.6, 3.55, 8.8, 0.3, "Machine Learning · Ciencia de Datos · Gerencia en IA", size=12, color=TEAL)
+texto(s, 0.6, 3.55, 8.8, 0.3, "Machine Learning · Ciencia de Datos · Gerencia de IA", size=12, color=TEAL)
 texto(s, 0.6, 4.4, 8, 0.3, "Docente: Gerson José Moreno Morales · Noviembre de 2026", size=12, color="CADCFC")
 
 # ------------------------------------------------------------------ 2. Resumen ejecutivo
-s = nueva("Resumen ejecutivo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "La decisión en una diapositiva",
+s = nueva("Resumen ejecutivo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "La decisión en una diapositiva",
           f"Habla: Gerencia de IA\n\n\"Empezamos por la conclusión. Sobre la misma prueba de 5.000 comentarios, {corto(BERT)} obtiene "
           f"F1 macro {n(f['f1'][BERT])}, {('+' if f['delta_bert_s3'] >= 0 else '')}{n(f['delta_bert_s3'])} frente al mejor modelo "
           f"recurrente ({S3}) y {('+' if f['delta_bert_base'] >= 0 else '')}{n(f['delta_bert_base'])} frente a TF-IDF. "
@@ -231,7 +231,7 @@ texto(s, 0.75, 3.0, 8.5, 0.35, "Decisión del comité", size=14, bold=True, colo
 texto(s, 0.75, 3.4, 8.5, 1.6, decision, size=13)
 
 # ------------------------------------------------------------------ 3. Problema
-s = nueva("Problema · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Quién usa el sistema y qué decisión mejora",
+s = nueva("Problema · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "Quién usa el sistema y qué decisión mejora",
           "Habla: Gerencia de IA\n\n\"El usuario es el analista de experiencia del comprador. La decisión: qué comentarios se atienden "
           "primero y a qué vendedor se le envía una alerta. Hoy se lee por muestreo y las estrellas solo existen en reseñas, no en chats ni "
           "reclamos. Construimos la etiqueta con las estrellas: 1 y 2 negativo, 3 neutro, 4 y 5 positivo. El error más caro es leer como "
@@ -537,7 +537,7 @@ if SES:
           size=11, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 13. Calibración y abstención
-s = nueva("Abstención · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Si el modelo no está seguro, decide una persona",
+s = nueva("Abstención · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "Si el modelo no está seguro, decide una persona",
           f"Habla: Gerencia de IA\n\n\"Primero calibramos: con temperature scaling la confianza de 0,8 significa acertar cerca del 80%. "
           f"Luego, si la confianza es menor que el umbral, el comentario pasa a una persona. El umbral se eligió en validación para lograr "
           f"recall de negativo de 0,92 en lo que el modelo decide. Con {corto(REC)}, en la prueba común decide el "
@@ -584,7 +584,7 @@ texto(s, 5.9, 3.25, 3.6, 1.8, [[("Calibración de " + corto(BERT) + ": ", {"bold
 
 # ------------------------------------------------------------------ 14. Costo y latencia
 ef = {e["modelo"]: e for e in s4["eficiencia"]}
-s = nueva("Costo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
+s = nueva("Costo · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "Calidad frente a costo: cuánto cuesta cada punto de F1",
           f"Habla: Gerencia de IA\n\n\"Medimos todo en el mismo portátil, sin GPU. TF-IDF responde en menos de un milisegundo; BETO, en "
           f"{n(f['p95'].get('BETO'), 0)} ms en el percentil 95, y la versión cuantizada a int8 en {n(f['p95'].get('BETO int8'), 0)} ms. "
           f"Con el supuesto de una máquina de 4 vCPU a 0,20 dólares la hora, procesar un millón de comentarios cuesta centavos con TF-IDF y "
@@ -608,7 +608,7 @@ for i, (v, et, col) in enumerate([
 # ------------------------------------------------------------------ 15. Criterio de adopción
 crit = s4["criterio"]
 mods_c = list(dict.fromkeys(c["modelo"] for c in crit))
-s = nueva("Decisión · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Criterio de adopción de la sesión 4",
+s = nueva("Decisión · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "Criterio de adopción de la sesión 4",
           f"Habla: Gerencia de IA\n\n\"El criterio de la sesión 4 exige cuatro cosas a la vez: mejorar el F1 al menos 0,02 frente al campeón "
           f"anterior, recall de negativo de 0,92 con abstención, cobertura automática de al menos 75% y latencia p95 de 150 ms o menos. "
           f"{(D['criterio_estricto'] + ' ' + D['por_que']) if D else ''}\"")
@@ -647,7 +647,7 @@ caja(s, 0.5, 4.1, 9.0, 0.95, "E0F2F4")
 texto(s, 0.7, 4.15, 8.6, 0.85, ((D["criterio_estricto"] + " ") if D else "") + decision_corta, size=11.5, color=NAVY, anchor=MSO_ANCHOR.MIDDLE)
 
 # ------------------------------------------------------------------ 16. Riesgos
-s = nueva("Gobierno · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia en IA", "Riesgos, controles y condiciones de suspensión",
+s = nueva("Gobierno · " + f"{POR_ROL[R_GIA]} · Magíster en Gerencia de IA", "Riesgos, controles y condiciones de suspensión",
           "Habla: Gerencia de IA\n\n\"Cada riesgo tiene un control y un responsable; la matriz completa está en el Excel. Lo más importante: "
           "el modelo solo prioriza y alerta, nunca sanciona; la PII se enmascara antes de inferir; reportamos F1 por país; y tenemos "
           "condiciones explícitas para suspender o volver al modelo simple.\"")

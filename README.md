@@ -6,7 +6,7 @@ Proyecto final de **Procesamiento de Lenguaje Natural**, Universidad Ean. Docent
 |---|---|---|
 | Pedro García Romero | Especialista en Machine Learning | Modelos, BETO, resultados y demo |
 | Carlos Trilleras | Magíster en Ciencia de Datos | Datos, fuga, errores, robustez y sesgo de longitud |
-| Fabiola Aldana Mora | Magíster en Gerencia en IA | Problema, valor, abstención, costo, riesgos y decisión |
+| Fabiola Aldana Mora | Magíster en Gerencia de IA | Problema, valor, abstención, costo, riesgos y decisión |
 
 Queríamos saber si vale la pena usar un Transformer preentrenado en español (BETO) para leer el sentimiento de los compradores, o si
 basta con algo más simple. Comparamos una línea base TF-IDF con regresión logística y SVM, las redes recurrentes de la sesión 3 (RNN,

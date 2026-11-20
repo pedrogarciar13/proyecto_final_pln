@@ -32,7 +32,7 @@ Lo que hizo el equipo:
 - [COMPLETAR: lo que hizo cada integrante, por ejemplo:]
   - Pedro García Romero (Machine Learning): [COMPLETAR]
   - Carlos Trilleras (Ciencia de Datos): [COMPLETAR]
-  - Fabiola Aldana Mora (Gerencia en IA): [COMPLETAR]
+  - Fabiola Aldana Mora (Gerencia de IA): [COMPLETAR]
 
 ## 2. Qué verificamos y cómo
 
